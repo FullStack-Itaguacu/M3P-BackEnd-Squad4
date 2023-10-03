@@ -7,7 +7,7 @@ class Server {
   constructor(app = express()) {
     this.initializeServer(app);
     this.middlewares(app);
-    this.routes(app);
+    this.allRoutes(app);
     this.database();
   }
 
@@ -21,7 +21,7 @@ class Server {
     app.use(express.json());
   }
 
-  async routes(app) {
+  async allRoutes(app) {
     app.use(routes);
   }
 
