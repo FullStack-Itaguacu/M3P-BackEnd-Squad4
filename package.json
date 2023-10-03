@@ -17,5 +17,8 @@
     "pg": "^8.11.3",
     "pg-connection-string": "^2.6.2",
     "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
