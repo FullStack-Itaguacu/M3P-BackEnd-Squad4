@@ -45,9 +45,14 @@ const Address = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    created_at: DATE,
-    updated_at: DATE,
-    deleted_at: DATE,
+    createdAt: {
+        type: DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DATE,
+        allowNull: false,
+      },
     },
   {
     underscored: true,
