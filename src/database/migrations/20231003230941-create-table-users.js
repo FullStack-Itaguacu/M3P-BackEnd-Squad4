@@ -38,11 +38,11 @@ module.exports = {
         allowNull: false,
       },
       created_by: {
-        type: INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       type_user: {
-        type: ENUM("Administrador", "Comprador"),
+        type: Sequelize.ENUM("Administrador", "Comprador"),
         allowNull: false,
         defaultValue: "Comprador",
       },
