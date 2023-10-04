@@ -46,11 +46,11 @@ const Address = sequelize.define(
       allowNull: true,
     },
     createdAt: {
-        type: DATE,
+        type: DataTypes.DATE,
         allowNull: false,
       },
       updatedAt: {
-        type: DATE,
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
