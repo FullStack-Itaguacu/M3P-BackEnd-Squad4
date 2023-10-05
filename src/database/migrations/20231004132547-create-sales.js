@@ -2,8 +2,8 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-  
+  async up(queryInterface, Sequelize) {
+
     await queryInterface.createTable('sales', {
       id: {
         allowNull: false,
@@ -37,16 +37,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id', 
+          model: 'Users',
+          key: 'id',
         },
       },
       seller_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id', 
+          model: 'Users',
+          key: 'id',
         },
       },
       product_id: {
@@ -72,12 +72,16 @@ module.exports = {
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
-      },   
+      },
+      deleted_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     });
 
   },
 
-  async down (queryInterface, Sequelize) {  
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('sales');
   }
 };
