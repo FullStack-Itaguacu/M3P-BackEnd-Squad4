@@ -10,7 +10,7 @@ const users_addresses = connection.define("users_addresses", {
     autoIncrement: true,
     primaryKey: true
   },
-  user_id: {
+  userId: {
     allowNull: false,
     type: INTEGER,
     references: {
@@ -18,7 +18,7 @@ const users_addresses = connection.define("users_addresses", {
       key: 'id'
     },
   },
-  address_id: {
+  addressId: {
     allowNull: false,
     type: INTEGER,
     references: {
@@ -33,6 +33,8 @@ const users_addresses = connection.define("users_addresses", {
   updated_at: {
     type: DATE,
     allowNull: false
-  }
-});
+  },
+},
+  { underscored: true, paranoid: true }
+);
 module.exports = { users_addresses };
