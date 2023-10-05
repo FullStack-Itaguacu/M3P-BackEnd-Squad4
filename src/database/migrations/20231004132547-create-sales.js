@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
   
-    await queryInterface.createTable('Sales', {
+    await queryInterface.createTable('sales', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,10 +17,6 @@ module.exports = {
       },
       amount_buy: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      created_at: {
-        type: Sequelize.DATE,
         allowNull: false,
       },
       total: {
@@ -69,15 +65,15 @@ module.exports = {
           key: 'id',
         },
       },
-      createdAt: {
+      created_At: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_At: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      deletedAt: {
+      deleted_At: {
         allowNull: true,
         type: Sequelize.DATE,
       },
