@@ -1,5 +1,5 @@
 const { connection } = require("../database/connection");
-const { INTEGER, DATEONLY, ENUM, DATE } = require("sequelize")
+const { INTEGER, REAL, ENUM, DATE } = require("sequelize")
 
 const Sale = connection.define(
     "sale",
@@ -35,6 +35,10 @@ const Sale = connection.define(
             allowNull: false,
         }, */
         created_at: {
+            type: DATE,
+            allowNull: false,
+        },
+        update_at: {
             type: DATE,
             allowNull: false,
         },
