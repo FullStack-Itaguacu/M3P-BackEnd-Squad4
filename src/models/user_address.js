@@ -1,9 +1,9 @@
 const { connection } = require('../database/connection');
 const { INTEGER, DATE } = require('sequelize');
-const { users } = require('./user');
-const { addresses } = require('./address');
+const { User } = require('./user');
+const  Address  = require('./address');
 
-const users_addresses = connection.define("users_addresses", {
+const UserAddress = connection.define("users_addresses", {
   id: {
     type: INTEGER,
     allowNull: false,
@@ -14,7 +14,7 @@ const users_addresses = connection.define("users_addresses", {
     allowNull: false,
     type: INTEGER,
     references: {
-      model: users,
+      model: User,
       key: 'id'
     },
   },
@@ -22,7 +22,7 @@ const users_addresses = connection.define("users_addresses", {
     allowNull: false,
     type: INTEGER,
     references: {
-      model: addresses,
+      model: Address,
       key: 'id'
     },
   },
@@ -37,4 +37,4 @@ const users_addresses = connection.define("users_addresses", {
 },
   { underscored: true, paranoid: true }
 );
-module.exports = { users_addresses };
+module.exports = { UserAddress };
