@@ -18,9 +18,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      numberStreet: {
+      number_street: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       neighborhood: {
         type: Sequelize.STRING,
@@ -46,15 +46,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      deletedAt: {
+      deleted_at: {
         type: Sequelize.DATE,
         allowNull: true,
       },
