@@ -37,14 +37,17 @@ module.exports = {
       complement: {
         type: Sequelize.STRING,
         allowNull: true,
+        defaultValue: null,
       },
       lat: {
         type: Sequelize.STRING,
         allowNull: true,
+        defaultValue: null,
       },
       long: {
         type: Sequelize.STRING,
         allowNull: true,
+        defaultValue: null,
       },
       created_at: {
         type: Sequelize.DATE,
