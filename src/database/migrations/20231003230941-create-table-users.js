@@ -46,6 +46,7 @@ module.exports = {
       created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
+        defaultValue: null,
       },
       type_user: {
         type: Sequelize.ENUM("Administrador", "Comprador"),
