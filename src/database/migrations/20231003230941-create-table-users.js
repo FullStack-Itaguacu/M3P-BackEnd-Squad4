@@ -27,7 +27,7 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       password: {
         type: Sequelize.STRING,
@@ -36,6 +36,12 @@ module.exports = {
       address_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: "addresses",
+          },
+          key: "id",
+        },
       },
       created_by: {
         type: Sequelize.INTEGER,
