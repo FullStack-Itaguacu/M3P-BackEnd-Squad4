@@ -1,5 +1,6 @@
 const { connection } = require("../database/connection");
 const { INTEGER, STRING, DATEONLY, ENUM, DATE } = require("sequelize");
+const Address = require('./address')
 
 const User = connection.define(
   "user",
@@ -36,7 +37,7 @@ const User = connection.define(
     },
     phone: {
       type: STRING,
-      allowNull: true,
+      allowNull: false,
     },
     password: {
       type: STRING,
@@ -59,6 +60,7 @@ const User = connection.define(
     createdBy: {
       type: INTEGER,
       allowNull: true,
+      defaultValue: null,
     },
     typeUser: {
       type: ENUM("Administrador", "Comprador"),
