@@ -17,6 +17,7 @@ module.exports = {
             model: {
               tableName: 'users'
             },
+            key: 'id'
           },
           allowNull: false,
         },
@@ -54,6 +55,7 @@ module.exports = {
         description: {
           type: Sequelize.STRING,
           allowNull: true,
+          defaultValue: null,
         },
         created_at: {
           type: Sequelize.DATE,
