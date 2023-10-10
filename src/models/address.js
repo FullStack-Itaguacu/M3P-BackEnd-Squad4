@@ -1,13 +1,14 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database.connection");
+const { connection } = require("../database/connection");
 
-const Address = sequelize.define(
+const Address = connection.define(
   "address",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     zip: {
       type: DataTypes.STRING,
@@ -30,20 +31,23 @@ const Address = sequelize.define(
       allowNull: false,
     },
     state: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(2),
       allowNull: false,
     },
     complement: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: null,
     },
     lat: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: null,
     },
     long: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: null,
     },
     createdAt: {
         type: DataTypes.DATE,
