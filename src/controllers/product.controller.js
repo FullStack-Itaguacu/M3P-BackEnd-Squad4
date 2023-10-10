@@ -37,7 +37,7 @@ class ProductController {
 
              // Validação dos campos obrigatórios
              const fieldValidations = [
-                validateFieldField('name', product.name),
+                validateField('name', product.name),
                 validateField('labName', product.labName),
                 validateField('imageLink', product.imageLink),
                 validateField('dosage', product.dosage),
@@ -69,7 +69,7 @@ class ProductController {
                 });
             }
 
-            // Crie o produto (simulação)
+            // Criar um produto
             const newProduct = await Product.create({
                 name: product.name,
                 labName: product.labName,
@@ -82,13 +82,13 @@ class ProductController {
             });
 
             return res.status(201).json({
-                message: 'Registro criado com sucesso.',
+                message: 'Produto criado com sucesso.',
                 data: newProduct,
             });
         } catch (error) {
             console.error(error);
             return res.status(500).json({
-                message: 'Ocorreu um erro interno no servidor.',
+                message: 'Ocorreu um erro no servidor.',
                 error: error.message,
             });     
         }
