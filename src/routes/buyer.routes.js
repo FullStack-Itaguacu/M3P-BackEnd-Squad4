@@ -7,7 +7,7 @@ class BuyerAddressRouter {
     const buyerRoutes = Router();
 
     // Adicione a autenticação como middleware antes da rota
-    //buyerRoutes.use(auth);
+    buyerRoutes.use(auth);
 
     buyerRoutes.get("/buyers/address", auth, BuyerAddressController.listUserAddresses);
 
