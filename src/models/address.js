@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database.connection");
+const { connection } = require("../database/connection");
 
-const Address = sequelize.define(
+const Address = connection.define(
   "address",
   {
     id: {
