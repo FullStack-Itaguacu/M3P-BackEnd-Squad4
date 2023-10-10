@@ -94,6 +94,81 @@ class ProductController {
         }
     }
 
+    async listAllProductsByUser(req, res) {
+        const { authorization } = req.headers;
+        const { offset, limit } = req.params;
+        const { name, typeProduct, totalStock } = req.query;
+        
+        try {
+            // Verificar se o token foi fornecido no headers
+            if(!authorization) {
+                return res.status(401).json({
+                    message: 'Acesso não autorizado. Token não informado'
+                })
+            }
+
+            //Verificar se o token é válido e decodificar o payload
+            let = decodedToken;
+            try {
+                decodedToken = verify(authorization, process.env.SECRET_JWT);
+            } catch (error) {
+                return res.status(401).json({
+                    message: 'Token inválido',
+                    cause: error.message
+                })
+            }
+
+            // Verificar se o usuário é um administrador
+            const user = await User.findByPk(decodedToken.id);
+            if(!user || user.typeProduct !== 'Administrador') {
+                return res.status(403).json({
+                    message: 'Acesso não autorizado. Somente administradores podem cadastrar produtos',
+                })
+            }
+
+            // Filtrar produtos com base em query params
+            const filter = {};
+            if(name) {
+                filter.name = name;
+            }
+            if(typeProduct) {
+                filter.typeProduct = typeProduct;
+            }
+
+            // Ordenar pelo campo totalStock
+            const order = [['total_stock', totalStock === 'asc' ? 'ASC' : 'DESC']];
+
+            // Configuração da paginação usando offset e limit
+            const valueOffset = parseInt(offset) || 0;
+            const valueLimit = parseInt(limit) || 20;
+
+            // Consultar produtos cadastrados pelo administrador com base no seu id
+            const productsByUserAdmin = await Product.findAndCountAll({
+                where: { user_id: decodedToken.id, ...filter },
+                order,
+                valueOffset,
+                valueLimit,
+            })
+            if(productsByUserAdmin.count === 0) {
+                return res.status(204).json({
+                    message: 'Nenhum produto encontrado'
+                })
+            }
+
+            return res.status(200).json({
+                message: 'Produtos listados com sucesso',
+                data: productsByUserAdmin,
+                totalResults: productsByUserAdmin.count,
+            })
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                message: 'Ocorreu um eroo no servidor',
+                error: error.message
+            })
+        }
+    }
+
 }
 
 module.exports = new ProductController();
