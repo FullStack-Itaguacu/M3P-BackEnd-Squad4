@@ -1,38 +1,16 @@
 const { User } = require('../models/user');
-const { validateField } = require('../utils/validateField');
+//const { validateField } = require('../controller');
 const {Product} = require('../models/product');
 const { verify } = require('jsonwebtoken');
+const { validaAuthorizationHeaders, validateField } = require('../services/product.services');
 
 class ProductController {
     async createOneProduct(req, res) {
         const { authorization } = req.headers;
         try {
-            // Verificar se o token de autorização vei no header
-            if(!authorization) {
-                return res.staus(401).json({
-                    message: 'Acesso não autorizado.Token não fornecido'        
-                });
-            }
-
-            // Verificar se o token é válido e decodificar o payload
-            let decodedToken;
-            try {
-                decodedToken = verify(authorization, process.env.SECRET_JWT);
-            } catch (error){
-                return res.status(401).json({ 
-                    message: 'Token inválido',
-                    cause: error.message
-                });
-            }
+            // Verificar dados passados no headers
+            const decodedToken = await validaAuthorizationHeaders(authorization, res);
             
-            // Verificar se o usuário é um administrador
-            const user = await User.findByPk(decodedToken.id);
-            if(!user || user.typeUser !== 'Administrador') {
-                return res.status(403).json({
-                    message: 'Acesso não autorizado, você não é um administrador'
-                })   
-            }
-
             // Pegar os dados do produto passados no corpo da requisição
             const { product } = req.body;
 
@@ -101,31 +79,8 @@ class ProductController {
         const { name, typeProduct, totalStock } = req.query;
         
         try {
-            // Verificar se o token foi fornecido no headers
-            if(!authorization) {
-                return res.status(401).json({
-                    message: 'Acesso não autorizado. Token não informado'
-                })
-            }
-
-            //Verificar se o token é válido e decodificar o payload
-            let = decodedToken;
-            try {
-                decodedToken = verify(authorization, process.env.SECRET_JWT);
-            } catch (error) {
-                return res.status(401).json({
-                    message: 'Token inválido',
-                    cause: error.message
-                })
-            }
-
-            // Verificar se o usuário é um administrador
-            const user = await User.findByPk(decodedToken.id);
-            if(!user || user.typeProduct !== 'Administrador') {
-                return res.status(403).json({
-                    message: 'Acesso não autorizado. Somente administradores podem cadastrar produtos',
-                })
-            }
+            // Verificar dados passados no headers
+            const decodedToken = await validaAuthorizationHeaders(authorization, res);
 
             // Filtrar produtos com base em query params
             const filter = {};
@@ -176,31 +131,8 @@ class ProductController {
         const { name, typeProduct, totalStock } = req.query;
 
         try {
-            // Verificar se o token de autorização foi fornecido no headers
-            if(!authorization) {
-                return res.status(401).json({
-                    message: 'Acesso não autorizado. Token não fornecido'
-                })
-            }
-
-            // Verificar se o token é válido e decodificar o payload
-            let decodedToken;
-            try {
-                decodedToken = verify(authorization, process.env.SECRET_JWT);
-            } catch (error) {
-                return res.status(401).json({
-                    message: 'Token inválido',
-                    cause: error.message,
-                })    
-            }
-
-            //Verificar se o usuário é um administrador
-            const user = await User.findByPk(decodedToken.id);
-            if(!user || user.typeProduct !== 'Administrador') {
-                return res.status(403).json({
-                    message: 'Acesso não autorizado. Você não é um administrador'
-                })
-            }
+            // Verificar dados passados no headers
+            const decodedToken = await validaAuthorizationHeaders(authorization, res);
 
             // Filtrar produtos com base no query params
             const filter = {};
@@ -250,36 +182,13 @@ class ProductController {
         const { productId } = req.params;
         
         try {
-            // Verificar se o token de autorização foi fornecido no headers
-            if(!authorization) {
-                return res.status(401).json({
-                    message: 'Id do produto não fornecido'
-                })
-            }
+            // Verificar dados passados no headers
+            const decodedToken = await validaAuthorizationHeaders(authorization, res);
             
             // Verificar se o id do produto foi passado por parametro
             if(!productId) {
                 return res.status(401).json({
                     message: 'Id do produto não fornecido',
-                })
-            }
-
-            // Verificar se o token é válido e decodificar o payload
-            let decodedToken;
-            try {
-                decodedToken = verify(authorization, process.env.SECRET_JWT);
-            } catch (error) {
-                return res.status(401).json({
-                    message: 'Token inválido',
-                    cause: error.message,
-                })
-            }
-
-            // Verificar se ousuário é um administrador
-            const user = await User.findByPk(decodedToken.id);
-            if(!user || user.typeUser !== 'Administrador') {
-                return res.status(403).json({
-                    message: 'Acesso não autorizado, você não é um administrador'
                 })
             }
 
@@ -310,31 +219,8 @@ class ProductController {
         const { name, imageLink, dosage, totalStock } = req.body;
 
         try {
-            // Verificar se o token foi fornecido no headers
-            if(!authorization) {
-                return res.status(401).json({
-                    message: 'Acesso não autorizado. Token não fornecido',
-                })
-            }
-
-            // Verificar se o token é válido e decodificar o payload
-            let decodedToken;
-            try {
-                decodedToken = verify(authorization, process.env.SECRET_JWT);
-            } catch (error) {
-                return res.status(401).json({
-                    message: "Token inválido",
-                    cause: error.message,
-                }) 
-            }
-
-            // Verificar se o usuário é um administrador
-            const user = await User.findByPk(decodedToken.id);
-            if(!user || user.typeUser !== 'Administrador') {
-                return res.status(403).json({
-                    message: 'Acesso não autorizado, você não é um administrador',
-                })
-            }
+            // Verificar dados passados no headers
+            const decodedToken = await validaAuthorizationHeaders(authorization, res);
 
             // Verificar se o pruduto existe
             const retornedProduct =await Product.findByPk(productId);
