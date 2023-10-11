@@ -14,7 +14,7 @@ class BuyerRouter {
       BuyerController.listUserAddresses
     );
     buyerRoutes.get('/buyers/admin/:offset/:limit', BuyerController.listAllBuyers);
-  
+    buyerRoutes.get('/buyers/admin/:userId', BuyerController.listAllBuyers);
   
     return buyerRoutes;
   }

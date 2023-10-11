@@ -24,9 +24,13 @@ class BuyerController {
 
       return res.status(200).send(userAddresses);
     } catch (error) {
-      return res.status(401).send({
-        msg: "Erro ao processar a requisição",
-        error: error.message,
+      console.error('Error in listUserAddresses:', error); 
+      
+      return res.status(500).json({
+        error: {
+          msg: 'Erro ao processar a requisição',
+          details: error.message,
+        },
       });
     }
   }
@@ -34,7 +38,6 @@ class BuyerController {
   //admin
   async listAllBuyers(req, res) {
     try {
-  
       if (!req.user || req.user.type !== 'ADMIN') {
         return res.status(403).json({
           msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
@@ -63,10 +66,12 @@ class BuyerController {
 
       const sortOrder = createdAt === 'asc' ? 1 : -1;
 
-      const users = await User.find(query)
-        .sort({ createdAt: sortOrder })
-        .skip(parsedOffset)
-        .limit(Math.min(parsedLimit, 20)); // Limit 20
+      const users = await User.findAll({
+        where: query,
+        order: [['createdAt', sortOrder]],
+        offset: parsedOffset,
+        limit: Math.min(parsedLimit, 20),
+      });
 
       if (users.length === 0) {
         return res.status(204).json({
@@ -81,7 +86,7 @@ class BuyerController {
     } catch (error) {
       console.error('Error in listAllBuyers:', error); 
 
-      return res.status(401).json({
+      return res.status(500).json({
         error: {
           msg: 'Erro ao processar a requisição',
           details: error.message,
