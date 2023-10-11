@@ -10,10 +10,11 @@ class BuyerRouter {
     buyerRoutes.use(auth);
 
     buyerRoutes.get(
-      "/buyer/address",
+      "/buyers/address",
       BuyerController.listUserAddresses
     );
-    buyerRoutes.get('/buyer/admin/:offset/:limit', BuyerController.listAllBuyer);
+    buyerRoutes.get('/buyers/admin/:offset/:limit', BuyerController.listAllBuyers);
+  
   
     return buyerRoutes;
   }

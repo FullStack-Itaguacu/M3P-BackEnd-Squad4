@@ -32,7 +32,7 @@ class BuyerController {
   }
 
   //admin
-  async listAllBuyer(req, res) {
+  async listAllBuyers(req, res) {
     try {
   
       if (!req.user || req.user.type !== 'ADMIN') {
