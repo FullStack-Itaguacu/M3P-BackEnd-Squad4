@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const { auth } = require('../middleware/auth');
-const BuyerAddressController = require('../controller/buyers.controller');
+const { Router } = require("express");
+const { auth } = require("../middleware/auth");
+const BuyerAddressController = require("../controller/buyers/buyers.controller");
 
 class BuyerAddressRouter {
   routesFromBuyerAddress() {
@@ -9,8 +9,11 @@ class BuyerAddressRouter {
     // Adicione a autenticação como middleware antes da rota
     buyerRoutes.use(auth);
 
-    buyerRoutes.get("/buyers/address", auth, BuyerAddressController.listUserAddresses);
-
+    buyerRoutes.get(
+      "/buyers/address",
+      BuyerAddressController.listUserAddresses
+    );
+  
     return buyerRoutes;
   }
 }
