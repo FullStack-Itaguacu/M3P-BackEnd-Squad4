@@ -1,10 +1,10 @@
 const { Router } = require("express");
-const { routesFromBuyers } = require("./buyers.routes");
+const { routesFromBuyer } = require("./buyer.routes");
 const routes = new Router();
 
 // routes.use();
 routes.use('/api', [
-   routesFromBuyers()
+   routesFromBuyer()
 ]);
 
 

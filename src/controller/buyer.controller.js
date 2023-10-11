@@ -1,7 +1,7 @@
 const { Address } = require("../models/address");
 const { User } = require("../models/user");
 
-class BuyersController {
+class BuyerController {
   async listUserAddresses(req, res) {
     try {
       // Obtém o ID do usuário do payload do JWT
@@ -32,7 +32,7 @@ class BuyersController {
   }
 
   //admin
-  async listAllBuyers(req, res) {
+  async listAllBuyer(req, res) {
     try {
   
       if (!req.user || req.user.type !== 'ADMIN') {
@@ -91,4 +91,4 @@ class BuyersController {
   }
 }
 
-module.exports = new BuyersController();
+module.exports = new BuyerController();
