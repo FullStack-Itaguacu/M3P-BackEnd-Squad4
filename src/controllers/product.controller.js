@@ -245,6 +245,65 @@ class ProductController {
         }
     }
 
+    async listProductById(req, res) {
+        const { authorization } = req.headers;
+        const { productId } = req.params;
+        
+        try {
+            // Verificar se o token de autorização foi fornecido no headers
+            if(!authorization) {
+                return res.status(401).json({
+                    message: 'Id do produto não fornecido'
+                })
+            }
+            
+            // Verificar se o id do produto foi passado por parametro
+            if(!productId) {
+                return res.status(401).json({
+                    message: 'Id do produto não fornecido',
+                })
+            }
+
+            // Verificar se o token é válido e decodificar o payload
+            let decodedToken;
+            try {
+                decodedToken = verify(authorization, process.env.SECRET_JWT);
+            } catch (error) {
+                return res.status(401).json({
+                    message: 'Token inválido',
+                    cause: error.message,
+                })
+            }
+
+            // Verificar se ousuário é um administrador
+            const user = await User.findByPk(decodedToken.id);
+            if(!user || user.typeUser !== 'Administrador') {
+                return res.status(403).json({
+                    message: 'Acesso não autorizado, você não é um administrador'
+                })
+            }
+
+            // Consultar um produto pelo seu código
+            const retornedProduct = await Product.findByPk(productId);
+            if(!retornedProduct) {
+                return res.status(404).json({
+                    message: 'Produto não encontrado',
+                })
+            }
+
+            return res.status(200).json({
+                message: 'Produto encontrado com sucesso',
+                data: retornedProduct,
+            })
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                message: 'Ocorreu um erro no servidor',
+                error: error.message,
+            })
+        }
+    }
+
 }
 
 module.exports = new ProductController();
