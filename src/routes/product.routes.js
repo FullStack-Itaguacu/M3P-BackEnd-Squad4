@@ -21,7 +21,9 @@ class ProductRouter {
         productRoutes.get('/products/admin/:offset/:limit', listAllProductsByUser);
         productRoutes.get('/products/:offset/:limit', listAllProducts);
         productRoutes.get('/products/:productId', listProductById);
-        productRoutes.patch('/products/admin/:productId', updateProductById)
+        productRoutes.patch('/products/admin/:productId', updateProductById);
+
+        return productRoutes;
     }
 }
 
