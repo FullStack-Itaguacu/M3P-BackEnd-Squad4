@@ -24,9 +24,13 @@ class BuyerController {
 
       return res.status(200).send(userAddresses);
     } catch (error) {
-      return res.status(401).send({
-        msg: "Erro ao processar a requisição",
-        error: error.message,
+      console.error('Error in listUserAddresses:', error); 
+      
+      return res.status(500).json({
+        error: {
+          msg: 'Erro ao processar a requisição',
+          details: error.message,
+        },
       });
     }
   }
@@ -34,7 +38,6 @@ class BuyerController {
   //admin
   async listAllBuyers(req, res) {
     try {
-  
       if (!req.user || req.user.type !== 'ADMIN') {
         return res.status(403).json({
           msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
@@ -63,10 +66,12 @@ class BuyerController {
 
       const sortOrder = createdAt === 'asc' ? 1 : -1;
 
-      const users = await User.find(query)
-        .sort({ createdAt: sortOrder })
-        .skip(parsedOffset)
-        .limit(Math.min(parsedLimit, 20)); // Limit 20
+      const users = await User.findAll({
+        where: query,
+        order: [['createdAt', sortOrder]],
+        offset: parsedOffset,
+        limit: Math.min(parsedLimit, 20),
+      });
 
       if (users.length === 0) {
         return res.status(204).json({
@@ -81,7 +86,88 @@ class BuyerController {
     } catch (error) {
       console.error('Error in listAllBuyers:', error); 
 
-      return res.status(401).json({
+      return res.status(500).json({
+        error: {
+          msg: 'Erro ao processar a requisição',
+          details: error.message,
+        },
+      });
+    }
+  }
+
+  //admin
+  async updateUser(req, res) {
+    try {
+   
+      if (!req.user || req.user.type !== 'ADMIN') {
+        return res.status(403).json({
+          msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
+        });
+      }
+
+      const userId = req.params.userId;
+
+      if (!userId) {
+        return res.status(400).json({
+          msg: 'Parâmetro userId inválido',
+        });
+      }
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({
+          msg: 'Usuário não encontrado',
+        });
+      }
+
+      const { fullName, email, cpf, phone, typeUser } = req.body;
+
+      if (fullName !== undefined && fullName !== '') {
+        user.fullName = fullName;
+      }
+
+      if (email !== undefined && email !== '') {
+        //verificar a lógica de email???
+
+        user.email = email;
+      }
+
+      if (cpf !== undefined && cpf !== '') {
+        //remove caracteres especiais do cpf com replace
+        user.cpf = cpf.replace(/[^\d]/g, '');
+      }
+
+      if (phone !== undefined && phone !== '') {
+
+        const parsedPhone = parseInt(phone);
+        if (!isNaN(parsedPhone) && parsedPhone >= 0) {
+          user.phone = parsedPhone.toString();
+        } else {
+          return res.status(422).json({
+            msg: 'Campo phone inválido',
+          });
+        }
+      }
+
+      if (typeUser !== undefined && typeUser !== '') {
+
+        if (user.type !== 'ADMIN' || typeUser === 'ADMIN') {
+          user.type = typeUser;
+        } else {
+          return res.status(422).json({
+            msg: 'Não é permitido trocar de ADMIN para BUYER',
+          });
+        }
+      }
+
+      await user.save();
+
+      return res.status(204).send();
+    } catch (error) {
+      console.error('Error in updateUser:', error);
+
+      return res.status(500).json({
         error: {
           msg: 'Erro ao processar a requisição',
           details: error.message,
@@ -90,5 +176,6 @@ class BuyerController {
     }
   }
 }
+
 
 module.exports = new BuyerController();
