@@ -1,5 +1,5 @@
 const { INTEGER, STRING, DATE } = require('sequelize');
-const {} = require('../database/connection');
+const { connection} = require('../database/connection');
 
 const Product = connection.define(
     'product', {
@@ -14,7 +14,7 @@ const Product = connection.define(
             allowNull: false
         },
         name: {
-            tyle: STRING,
+            type: STRING,
             allowNull: false
         },
         labName: {

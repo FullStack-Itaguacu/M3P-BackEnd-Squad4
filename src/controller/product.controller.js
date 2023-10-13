@@ -1,8 +1,9 @@
 const { User } = require('../models/user');
-//const { validateField } = require('../controller');
 const {Product} = require('../models/product');
-const { verify } = require('jsonwebtoken');
-const { validaAuthorizationHeaders, validateField } = require('../services/product.services');
+const { 
+    validaAuthorizationHeaders, 
+    validateField 
+} = require('../services/product.services');
 
 class ProductController {
     async createOneProduct(req, res) {
