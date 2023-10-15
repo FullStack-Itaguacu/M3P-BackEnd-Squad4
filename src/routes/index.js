@@ -1,13 +1,15 @@
 const { Router } = require("express");
-const { routesFromBuyer } = require("./buyer.routes");
-const { routesFromProduct } = require("./product.routes");
+const { routesFromBuyerAddress } = require("./buyer.routes");
+const { routesFromUser } = require("./user.routes");
 const routes = new Router();
 
-// routes.use();
+
 routes.use('/api', [
-   routesFromBuyer(),
-   routesFromProduct()
+   routesFromBuyerAddress(),
+   routesFromUser(),
+
 ]);
+
 
 
 module.exports = routes;
