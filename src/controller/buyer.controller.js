@@ -96,6 +96,45 @@ class BuyerController {
   }
 
   //admin
+  async listBuyerById(req, res) {
+    try {
+      // Verifica se o usuário autenticado é um ADMIN
+      if (!req.user || req.user.type !== 'ADMIN') {
+        return res.status(403).json({
+          msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
+        });
+      }
+
+      const userId = req.params.userId;
+
+      if (!userId || isNaN(userId) || userId <= 0) {
+        return res.status(400).json({
+          msg: 'Parâmetro userId inválido',
+        });
+      }
+
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(404).json({
+          msg: 'Usuário não encontrado',
+        });
+      }
+
+      return res.status(200).json(user);
+    } catch (error) {
+      console.error('Error in listBuyerById:', error);
+
+      return res.status(500).json({
+        error: {
+          msg: 'Erro ao processar a requisição',
+          details: error.message,
+        },
+      });
+    }
+  }
+
+  //admin
   async updateUser(req, res) {
     try {
    
@@ -176,6 +215,5 @@ class BuyerController {
     }
   }
 }
-
 
 module.exports = new BuyerController();
