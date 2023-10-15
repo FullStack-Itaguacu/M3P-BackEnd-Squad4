@@ -27,7 +27,13 @@ const Product = connection.define(
         },
         dosage: {
             type: STRING,
-            allowNull: false
+            allowNull: false,
+            validate:{
+                isIn: {
+                    args: [['mg', 'g', 'mL', '%', 'Outro']],
+                    msg: 'Dosagem inválida'
+                }
+            }
         },
         unitPrice: {
             type: INTEGER,
