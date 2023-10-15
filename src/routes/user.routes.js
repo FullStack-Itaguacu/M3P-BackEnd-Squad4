@@ -1,16 +1,14 @@
 const { Router } = require('express');
 const UserController = require('../controller/user.controller');
-
+//const authMiddleware = require('../middleware/auth');
 class UserRouter {
   routesFromUser() {
     const userRoutes = Router();
     userRoutes.post("/user/login", UserController.loginUser);
-<<<<<<< HEAD
     userRoutes.post('/admin/login', UserController.loginAdminUser);
-=======
-
->>>>>>> a010438af5e453ab87a8e10e3af59c498e02d2ae
-
+    userRoutes.post('/user/signup', UserController.buyerSignup);
+    userRoutes.post('/user/admin/signup', UserController.adminSignup);
+    //userRoutes.post('/user/admin/signup', authMiddleware, UserController.adminSignup);
     return userRoutes;
   }
 }
