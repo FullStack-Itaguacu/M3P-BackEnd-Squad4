@@ -6,6 +6,7 @@ class UserRouter {
     const userRoutes = Router();
     userRoutes.post("/user/login", UserController.loginUser);
     userRoutes.post('/admin/login', UserController.loginAdminUser);
+    userRoutes.post('/user/signup', UserController.buyerSignup);
 
     return userRoutes;
   }

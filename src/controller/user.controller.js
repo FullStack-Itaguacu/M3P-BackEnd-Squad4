@@ -1,6 +1,9 @@
 const { User } = require('../models/user');
 const Address = require('../models/address');
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const secretKey = process.env.SECRET_KEY; // Usa a chave secreta do .env
 
 class UserController {
 
@@ -96,6 +99,79 @@ class UserController {
             res.status(500).json({ error: "Erro interno do servidor." });
         }
     }
+    async buyerSignup(req, res) {
+        try {
+          const { user, address } = req.body;
+    
+          const {
+            fullName,
+            cpf,
+            birthDate,
+            email,
+            phone,
+            password,
+          } = user;
+    
+          const {
+            zip,
+            street,
+            numberStreet,
+            neighborhood,
+            city,
+            state,
+            complement,
+            lat,
+            long,
+          } = address;
+    
+          // Verifica campos obrigatórios
+          if ([
+            fullName, cpf, birthDate, email, phone, password, zip, street,
+            numberStreet, neighborhood, city, state
+          ].some(field => !field)) {
+            return res.status(422).json({ message: 'Campos obrigatórios não preenchidos.' });
+          }
+    
+          // Valida Telefone
+          if (!/^\d{9,15}$/.test(phone)) {
+            return res.status(400).json({ message: 'Telefone inválido.' });
+          }
+    
+          // Cria o endereço.
+          const createdAddress = await Address.create({
+            zip,
+            street,
+            numberStreet,
+            neighborhood,
+            city,
+            state,
+            complement,
+            lat,
+            long,
+          });
+    
+          // Cria o usuário.
+          const hashedPassword = await bcrypt.hash(password, 10); // Criptografe a senha.
+          const createdUser = await User.create({
+            fullName,
+            cpf,
+            birthDate,
+            email,
+            phone,
+            password: hashedPassword,
+            addressId: createdAddress.id,
+            typeUser: 'Comprador',
+          });
+    
+          return res.status(201).json({ message: 'Registros criados com sucesso.' });
+        } catch (error) {
+          if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({ message: 'CPF ou email já cadastrados.' });
+          }
+          console.error(error);
+          return res.status(400).json({ message: 'Erro ao criar registros.' });
+        }
+      }
 }
 module.exports = new UserController();
 
