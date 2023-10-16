@@ -3,7 +3,6 @@ const Address = require('../models/address');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
-const secretKey = process.env.SECRET_KEY; // Usa a chave secreta do .env
 
 class UserController {
 
@@ -162,6 +161,95 @@ class UserController {
             addressId: createdAddress.id,
             typeUser: 'Comprador',
           });
+    
+          return res.status(201).json({ message: 'Registros criados com sucesso.' });
+        } catch (error) {
+          if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({ message: 'CPF ou email já cadastrados.' });
+          }
+          console.error(error);
+          return res.status(400).json({ message: 'Erro ao criar registros.' });
+        }
+      }
+      async adminSignup(req, res) {
+        try {
+          const { user, address } = req.body;
+    
+          const {
+            fullName,
+            cpf,
+            birthDate,
+            email,
+            phone,
+            password,
+            typeUser,
+          } = user;
+    
+          const {
+            zip,
+            street,
+            numberStreet,
+            neighborhood,
+            city,
+            state,
+            complement,
+            lat,
+            long,
+          } = address;
+    
+          // Verifica campos obrigatórios
+          if ([
+            fullName, cpf, birthDate, email, phone, password, typeUser, zip, street,
+            numberStreet, neighborhood, city, state
+          ].some(field => !field)) {
+            return res.status(422).json({ message: 'Campos obrigatórios não preenchidos.' });
+          }
+    
+          // Valida Telefone
+          if (!/^\d{9,15}$/.test(phone)) {
+            return res.status(400).json({ message: 'Telefone inválido.' });
+          }
+    
+          // Verifica se já existe um usuário com o mesmo CPF ou e-mail
+          const existingUser = await User.findOne({
+            where: {
+              [Op.or]: [
+                { cpf: user.cpf },
+                { email: user.email }
+              ]
+            }
+          });
+    
+          if (existingUser) {
+            return res.status(409).json({ message: "Usuário com CPF ou e-mail já cadastrado." });
+          }
+    
+          // Cria o endereço.
+          const createdAddress = await Address.create({
+            zip,
+            street,
+            numberStreet,
+            neighborhood,
+            city,
+            state,
+            complement,
+            lat,
+            long,
+          });
+    
+          // Cria o usuário.
+          const hashedPassword = await bcrypt.hash(password, 10); // Criptografa a senha.
+          const createdUser = await User.create({
+            fullName,
+            cpf,
+            birthDate,
+            email,
+            phone,
+            password: hashedPassword,
+            addressId: createdAddress.id,
+            typeUser: 'Administrador',
+          });
+    
     
           return res.status(201).json({ message: 'Registros criados com sucesso.' });
         } catch (error) {
