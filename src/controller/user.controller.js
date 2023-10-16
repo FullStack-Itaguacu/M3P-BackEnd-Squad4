@@ -39,7 +39,7 @@ class UserController {
                 type_user: user.typeUser,
             };
 
-            const secretKey = process.env.SECRET_KEY_BUYER;
+            const secretKey = process.env.JWT_SECRET_KEY;
 
             // Gera um token para o usuário
             const token = jwt.sign(tokenPayload, secretKey);
@@ -85,7 +85,7 @@ class UserController {
                 full_name: user.fullName,
                 type_user: user.typeUser,
             };
-            const secretKey = process.env.SECRET_KEY_ADMIN;
+            const secretKey = process.env.JWT_SECRET_KEY;
 
             // Gere um token para o usuário
             const token = jwt.sign(tokenPayload, secretKey);
