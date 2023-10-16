@@ -5,7 +5,7 @@ class UserRouter {
   routesFromUser() {
     const userRoutes = Router();
     userRoutes.post("/user/login", UserController.loginUser);
-
+    userRoutes.post('/admin/login', UserController.loginAdminUser);
 
     return userRoutes;
   }
