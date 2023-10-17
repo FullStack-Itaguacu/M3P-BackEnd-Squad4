@@ -2,7 +2,8 @@ const { User } = require('../models/user');
 const Address = require('../models/address');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
+const { jwt_secret_key } = require('../config/database.config');
 
 class UserController {
 
@@ -39,11 +40,8 @@ class UserController {
                 type_user: user.typeUser,
             };
 
-            const secretKey = process.env.JWT_SECRET_KEY;
-
             // Gera um token para o usuário
-            const token = jwt.sign(tokenPayload, secretKey);
-
+            const token = sign(tokenPayload, jwt_secret_key);
 
             // Retorna o token no corpo da resposta
             res.status(200).json({ token });
@@ -77,7 +75,6 @@ class UserController {
                 return res.status(401).json({ error: "Senha incorreta." });
             }
 
-
             // Crie um token JWT com os campos solicitados no payload
             const tokenPayload = {
                 id: user.id,
@@ -85,11 +82,9 @@ class UserController {
                 full_name: user.fullName,
                 type_user: user.typeUser,
             };
-            const secretKey = process.env.JWT_SECRET_KEY;
 
             // Gere um token para o usuário
-            const token = jwt.sign(tokenPayload, secretKey);
-
+            const token = sign(tokenPayload, jwt_secret_key);
 
             // Retorne o token no corpo da resposta
             res.status(200).json({ token });
@@ -250,7 +245,6 @@ class UserController {
             typeUser: 'Administrador',
           });
     
-    
           return res.status(201).json({ message: 'Registros criados com sucesso.' });
         } catch (error) {
           if (error.name === 'SequelizeUniqueConstraintError') {
@@ -261,5 +255,5 @@ class UserController {
         }
       }
 }
-module.exports = new UserController();
 
+module.exports = new UserController();
