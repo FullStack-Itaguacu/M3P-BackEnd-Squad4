@@ -33,16 +33,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      address_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: "addresses",
-          },
-          key: "id",
-        },
-      },
       created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
