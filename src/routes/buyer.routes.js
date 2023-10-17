@@ -1,18 +1,19 @@
 const { Router } = require("express");
 const { auth } = require("../middleware/auth");
-const BuyerController = require("../controller/buyer.controller");
+const {
+  listUserAddresses,
+  listAllBuyers,
+  listBuyerById,
+  updateUser,
+} = require("../controller/buyer.controller");
 
 class BuyerRouter {
   routesFromBuyer() {
     const buyerRoutes = Router();
-
-    //autenticação como middleware antes da rota
-    buyerRoutes.use(auth);
-
-    buyerRoutes.get("/buyers/address", BuyerController.listUserAddresses);
-    buyerRoutes.get("/buyers/admin/:offset/:limit", BuyerController.listAllBuyers);
-    buyerRoutes.get("/buyers/admin/:userId", BuyerController.listBuyerById);
-    buyerRoutes.patch("/buyers/admin/:userId", BuyerController.updateUser);
+    buyerRoutes.get("/buyers/address", auth, listUserAddresses);
+    buyerRoutes.get("/buyers/admin/:offset/:limit", auth, listAllBuyers);
+    buyerRoutes.get("/buyers/admin/:userId", auth, listBuyerById);
+    buyerRoutes.patch("/buyers/admin/:userId", auth, updateUser);
     return buyerRoutes;
   }
 }
