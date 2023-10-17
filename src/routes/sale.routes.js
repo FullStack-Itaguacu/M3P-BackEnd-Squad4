@@ -1,16 +1,16 @@
 const { Router } = require("express");
 const { createOneSale, listSale, listSaleByAdmin, listResultByAdmin } = require("../controller/sale.controller");
-//const { auth } = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 
 
 class SaleRouter {
     routesFromSale(){
         const saleRoutes = Router();
-        //saleRoutes.use(auth);
-        saleRoutes.post('/sales/', createOneSale);
-        saleRoutes.get('/sales/', listSale);
-        saleRoutes.get('/sales/admin', listSaleByAdmin);
-        saleRoutes.get('/sales/admin', listResultByAdmin);
+        
+        saleRoutes.post('/sales/',auth, createOneSale);
+        saleRoutes.get('/sales/',auth, listSale);
+        saleRoutes.get('/sales/admin',auth, listSaleByAdmin);
+        saleRoutes.get('/sales/admin',auth, listResultByAdmin);
        
         return saleRoutes;
     }
