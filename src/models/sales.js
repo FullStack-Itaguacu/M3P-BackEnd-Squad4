@@ -2,13 +2,62 @@ const { connection } = require("../database/connection");
 const { INTEGER, REAL, ENUM, DATE } = require("sequelize");
 
 const Sale = connection.define(
-  "sale",
-  {
-    id: {
-      type: INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
+    "sale",
+    {
+        id: {
+            allowNull: false,
+            type: INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        //
+        buyer_id: {
+            type: INTEGER,
+            allowNull: false,
+        },
+        seller_id: {
+            type: INTEGER,
+            allowNull: false,
+        },
+        product_id: {
+            type: INTEGER,
+            allowNull: false,
+        },
+        //
+        unit_price: {
+            type: REAL,
+            allowNull: false,
+        },
+        amount_buy: {
+            type: INTEGER,
+            allowNull: false,
+        },
+        //
+        users_addresses_id: {
+            type: INTEGER,
+            allowNull: false,
+        },
+        created_at: {
+            type: DATE,
+            allowNull: false,
+        },
+        update_at: {
+            type: DATE,
+            allowNull: true,
+        },
+        total: {
+            type: REAL,
+            allowNull: false,
+        },
+        type_payment: {
+            type: ENUM(
+                'cartão de crédito',
+                'cartão de débito',
+                'PIX', 'boleto',
+                'transferência bancária'
+            ),
+            allowNull: false,
+        },
     },
     unit_price: {
       type: REAL,
