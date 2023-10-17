@@ -11,45 +11,45 @@ const Sale = connection.define(
             autoIncrement: true,
         },
         //
-        buyer_id: {
+        buyerId: {
             type: INTEGER,
             allowNull: false,
         },
-        seller_id: {
+        sellerId: {
             type: INTEGER,
             allowNull: false,
         },
-        product_id: {
+        productId: {
             type: INTEGER,
             allowNull: false,
         },
         //
-        unit_price: {
+        unitPrice: {
             type: REAL,
             allowNull: false,
         },
-        amount_buy: {
+        amountBuy: {
             type: INTEGER,
             allowNull: false,
         },
         //
-        users_addresses_id: {
+        usersAddressesId: {
             type: INTEGER,
             allowNull: false,
         },
-        created_at: {
+        createdAt: {
             type: DATE,
             allowNull: false,
         },
-        updated_at: {
+        updatedAt: {
             type: DATE,
-            allowNull: true,
+            allowNull: false,
         },
         total: {
             type: REAL,
             allowNull: false,
         },
-        type_payment: {
+        typePayment: {
             type: ENUM(
                 'cartão de crédito',
                 'cartão de débito',
