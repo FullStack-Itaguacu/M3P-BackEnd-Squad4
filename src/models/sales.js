@@ -41,7 +41,7 @@ const Sale = connection.define(
             type: DATE,
             allowNull: false,
         },
-        update_at: {
+        updated_at: {
             type: DATE,
             allowNull: true,
         },
