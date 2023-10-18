@@ -11,7 +11,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.changeColumn('products', 'dosage',{
-      type: SequelizeScopeError.string,
+      type: Sequelize.STRING,
       allowNull: false
     })
   }
