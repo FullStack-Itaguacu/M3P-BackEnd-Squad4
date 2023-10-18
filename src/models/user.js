@@ -50,8 +50,11 @@ const User = connection.define(
     },
     createdBy: {
       type: INTEGER,
-      allowNull: true,
-      defaultValue: null,
+      allowNull: false,
+      references: {
+        model: { tableName: "users" },
+        key: "id",
+      },
     },
     typeUser: {
       type: ENUM("Administrador", "Comprador"),
