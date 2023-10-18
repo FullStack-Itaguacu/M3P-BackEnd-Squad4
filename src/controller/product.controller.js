@@ -38,7 +38,34 @@ class ProductController {
                 }); 
             }
 
-            // Valide o campo typeProduct
+            // Verificar se o produto já foi cadastrado
+            const retornedProduct = await Product.findOne({
+                where: {fullName: fullName}
+            });
+            if(retornedProduct) {
+                return res.status(400).json({
+                    message: 'Produto já cadastrado',
+                    cause: error.message
+                })
+            }
+
+            // Validar o campo dosage
+            const campoDosage = ['mg', 'g', 'mL', '%', 'Outro']
+            if (!campoDosage.includes(dosage)) {
+                return res.status(400).json({
+                    message: 'Campo dosage mal formatado',
+                    cause: 'O campo deve ter o valor: "mg", "g", "mL", "%" ou "Outro"'
+                });
+            }
+
+            // Validar o campo unitPrice
+            if (isNaN(Number(unitPrice))) {
+                return response.status(400).send({ 
+                    message: "O preço unitário deve possuir um valor numérico!" 
+                });
+            }
+
+            // Validar o campo typeProduct
             const productType = [
                 'Medicamento Controlado', 
                 'Medicamento Não Controlado'
@@ -46,8 +73,11 @@ class ProductController {
             if (!productType.includes(typeProduct)) {
                 return res.status(400).json({
                     message: 'Campo tipo do produto mal formatado',
+                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
                 });
             }
+
+
 
             // Criar um produto
             const newProduct = await Product.create({
@@ -166,7 +196,7 @@ class ProductController {
 
             return res.status(200).json({
                 message: 'Produtos listados com sucesso',
-                data: products,
+                data: allProducts,
                 totalResults: allProducts.count,
             })
         } catch (error) {
@@ -191,6 +221,13 @@ class ProductController {
                 return res.status(401).json({
                     message: 'Id do produto não fornecido',
                 })
+            }
+
+            // Verificar se o productId é um valor numérico
+            if (isNaN(Number(productId))) {
+                return response.status(400).send({
+                    message: "O id do produto deve possuir um valor numérico!" 
+                });
             }
 
             // Consultar um produto pelo seu código
@@ -222,6 +259,13 @@ class ProductController {
         try {
             // Verificar dados passados no headers
             const decodedToken = await validaAuthorizationHeaders(authorization, res);
+
+             // Verificar se o productId é um valor numérico
+             if (isNaN(Number(productId))) {
+                return response.status(400).send({
+                    message: "O id do produto deve possuir um valor numérico!" 
+                });
+            }
 
             // Verificar se o pruduto existe
             const retornedProduct =await Product.findByPk(productId);
