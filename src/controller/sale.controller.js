@@ -11,14 +11,14 @@ class SaleController {
             for (const saleItem of saleData) {
                 const currentDateTime = new Date();
                 const newSale = Sale.build({
-                    unit_price: 1.80,
-                    amount_buy: saleItem.amount_buy,
+                    unitPrice: 1.80,
+                    amountBuy: saleItem.amount_buy,
                     total: 1.00,
-                    type_payment: saleItem.type_payment,
-                    buyer_id: 18,
-                    seller_id: 15,
-                    product_id: saleItem.product_id,
-                    users_addresses_id: saleItem.users_addresses_id,
+                    typePayment: saleItem.type_payment,
+                    buyerId: 2,
+                    sellerId: 1,
+                    productId: saleItem.product_id,
+                    usersAddressesId: saleItem.users_addresses_id,
                     created_at: currentDateTime,
                     update_at: currentDateTime
 
