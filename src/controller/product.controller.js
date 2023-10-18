@@ -13,51 +13,79 @@ class ProductController {
             const decodedToken = await validaAuthorizationHeaders(authorization, res);
             
             // Pegar os dados do produto passados no corpo da requisição
-            const { product } = req.body;
+            const { name, labName, imageLink, dosage, unitPrice, typeProduct, totalStock } = req.body;
 
-             // Validação dos campos obrigatórios
-             const fieldValidations = [
-                validateField('name', product.name),
-                validateField('labName', product.labName),
-                validateField('imageLink', product.imageLink),
-                validateField('dosage', product.dosage),
-                validateField('unitPrice', product.unitPrice),
-                validateField('typeProduct', product.typeProduct),
-                validateField('totalStock', product.totalStock),
+            // Validação dos campos obrigatórios
+            const fieldValidations = [
+                validateField('name', name),
+                validateField('labName', labName),
+                validateField('imageLink', imageLink),
+                validateField('dosage', dosage),
+                validateField('unitPrice', unitPrice),
+                validateField('typeProduct', typeProduct),
+                validateField('totalStock', totalStock),
             ]
 
-             //Encontrar a primeira validação que falhe
-             const firstValidationError = fieldValidations.find(
+            //Encontrar a primeira validação que falhou
+            const firstValidationError = fieldValidations.find(
                 validation => validation !== null
             );
 
-            // Se houver uma validação que falhou, retorne um erro
+            // Se alguma validação falhou, retorna o erro
             if (firstValidationError) {
                 return res.status(422).json({ 
                     message: firstValidationError.error 
                 }); 
             }
 
-            // Valide o campo typeProduct
+            // Verificar se o produto já foi cadastrado
+            const returnedProduct = await Product.findOne({
+                where: {fullName: fullName}
+            });
+            if(returnedProduct) {
+                return res.status(400).json({
+                    message: 'Produto já cadastrado',
+                    cause: error.message
+                })
+            }
+
+            // Validar o campo dosage
+            const campoDosage = ['mg', 'g', 'mL', '%', 'Outro']
+            if (!campoDosage.includes(dosage)) {
+                return res.status(400).json({
+                    message: 'Campo dosage mal formatado',
+                    cause: 'O campo deve ter o valor: "mg", "g", "mL", "%" ou "Outro"'
+                });
+            }
+
+            // Validar o campo unitPrice
+            if (isNaN(Number(unitPrice)) || unitPrice < 0) {
+                return response.status(400).send({ 
+                    message: "O preço unitário deve possuir um valor numérico válido!" 
+                });
+            }
+
+            // Validar o campo typeProduct
             const productType = [
                 'Medicamento Controlado', 
                 'Medicamento Não Controlado'
             ]
-            if (!productType.includes(product.typeProduct)) {
+            if (!productType.includes(typeProduct)) {
                 return res.status(400).json({
                     message: 'Campo tipo do produto mal formatado',
+                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
                 });
             }
 
             // Criar um produto
             const newProduct = await Product.create({
-                name: product.name,
-                labName: product.labName,
-                imageLink: product.imageLink,
-                dosage: product.dosage,
-                unitPrice: product.unitPrice,
-                typeProduct: product.typeProduct,
-                totalStock: product.totalStock,
+                name: name,
+                labName: labName,
+                imageLink: imageLink,
+                dosage: dosage,
+                unitPrice: unitPrice,
+                typeProduct: typeProduct,
+                totalStock: totalStock,
                 userId: decodedToken.id,
             });
 
@@ -69,7 +97,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor.',
-                error: error.message,
+                cause: error.message,
             });     
         }
     }
@@ -121,7 +149,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um eroo no servidor',
-                error: error.message
+                cause: error.message
             })
         }
     }
@@ -133,7 +161,7 @@ class ProductController {
 
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
 
             // Filtrar produtos com base no query params
             const filter = {};
@@ -166,14 +194,14 @@ class ProductController {
 
             return res.status(200).json({
                 message: 'Produtos listados com sucesso',
-                data: products,
+                data: allProducts,
                 totalResults: allProducts.count,
             })
         } catch (error) {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })    
         }
     }
@@ -184,7 +212,7 @@ class ProductController {
         
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
             
             // Verificar se o id do produto foi passado por parametro
             if(!productId) {
@@ -193,9 +221,16 @@ class ProductController {
                 })
             }
 
+            // Verificar se o productId é um valor numérico
+            if (isNaN(Number(productId)) || productId < 0) {
+                return response.status(400).send({
+                    message: "O id do produto deve possuir um valor numérico válido!" 
+                });
+            }
+
             // Consultar um produto pelo seu código
-            const retornedProduct = await Product.findByPk(productId);
-            if(!retornedProduct) {
+            const returnedProduct = await Product.findByPk(productId);
+            if(!returnedProduct) {
                 return res.status(404).json({
                     message: 'Produto não encontrado',
                 })
@@ -203,13 +238,13 @@ class ProductController {
 
             return res.status(200).json({
                 message: 'Produto encontrado com sucesso',
-                data: retornedProduct,
+                data: returnedProduct,
             })
         } catch (error) {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })
         }
     }
@@ -221,11 +256,18 @@ class ProductController {
 
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
+
+            // Verificar se o productId é um valor numérico
+            if (isNaN(Number(productId)) || productId <= 0) {
+                return response.status(400).send({
+                    message: "O id do produto deve possuir um valor numérico válido!" 
+                });
+            }
 
             // Verificar se o pruduto existe
-            const retornedProduct =await Product.findByPk(productId);
-            if(!retornedProduct) {
+            const returnedProduct =await Product.findByPk(productId);
+            if(!returnedProduct) {
                 return res.status(400).json({
                     message: 'Produto não encontrado',
                 })
@@ -247,7 +289,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })
         }
     }
