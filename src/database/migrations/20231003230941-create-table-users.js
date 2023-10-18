@@ -35,8 +35,11 @@ module.exports = {
       },
       created_by: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        defaultValue: null,
+        allowNull: false,
+        references: {
+          model: { tableName: "users" },
+          key: "id",
+        },
       },
       type_user: {
         type: Sequelize.ENUM("Administrador", "Comprador"),
