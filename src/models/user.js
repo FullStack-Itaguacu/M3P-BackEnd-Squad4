@@ -50,7 +50,8 @@ const User = connection.define(
     },
     createdBy: {
       type: INTEGER,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
       references: {
         model: { tableName: "users" },
         key: "id",
