@@ -20,7 +20,7 @@ class ProductServices {
       }); 
     }
     const user = await User.findByPk(decodedToken.id);
-    if(!user || user.typeUser !== 'Administrador') {
+    if(!user || user.typeUser !== 'ADMIN') {
       return res.status(403).json({
         message: 'Acesso não autorizado, você não é um administrador',
       });

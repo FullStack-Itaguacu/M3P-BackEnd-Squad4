@@ -15,8 +15,8 @@ class ProductController {
             // Pegar os dados do produto passados no corpo da requisição
             const { name, labName, imageLink, dosage, unitPrice, typeProduct, totalStock } = req.body;
 
-             // Validação dos campos obrigatórios
-             const fieldValidations = [
+            // Validação dos campos obrigatórios
+            const fieldValidations = [
                 validateField('name', name),
                 validateField('labName', labName),
                 validateField('imageLink', imageLink),
@@ -26,12 +26,12 @@ class ProductController {
                 validateField('totalStock', totalStock),
             ]
 
-             //Encontrar a primeira validação que falhe
-             const firstValidationError = fieldValidations.find(
+            //Encontrar a primeira validação que falhou
+            const firstValidationError = fieldValidations.find(
                 validation => validation !== null
             );
 
-            // Se houver uma validação que falhou, retorne um erro
+            // Se alguma validação falhou, retorna o erro
             if (firstValidationError) {
                 return res.status(422).json({ 
                     message: firstValidationError.error 
@@ -39,10 +39,10 @@ class ProductController {
             }
 
             // Verificar se o produto já foi cadastrado
-            const retornedProduct = await Product.findOne({
+            const returnedProduct = await Product.findOne({
                 where: {fullName: fullName}
             });
-            if(retornedProduct) {
+            if(returnedProduct) {
                 return res.status(400).json({
                     message: 'Produto já cadastrado',
                     cause: error.message
@@ -59,9 +59,9 @@ class ProductController {
             }
 
             // Validar o campo unitPrice
-            if (isNaN(Number(unitPrice))) {
+            if (isNaN(Number(unitPrice)) || unitPrice < 0) {
                 return response.status(400).send({ 
-                    message: "O preço unitário deve possuir um valor numérico!" 
+                    message: "O preço unitário deve possuir um valor numérico válido!" 
                 });
             }
 
@@ -76,8 +76,6 @@ class ProductController {
                     cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
                 });
             }
-
-
 
             // Criar um produto
             const newProduct = await Product.create({
@@ -214,7 +212,7 @@ class ProductController {
         
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
             
             // Verificar se o id do produto foi passado por parametro
             if(!productId) {
@@ -224,15 +222,15 @@ class ProductController {
             }
 
             // Verificar se o productId é um valor numérico
-            if (isNaN(Number(productId))) {
+            if (isNaN(Number(productId)) || productId < 0) {
                 return response.status(400).send({
-                    message: "O id do produto deve possuir um valor numérico!" 
+                    message: "O id do produto deve possuir um valor numérico válido!" 
                 });
             }
 
             // Consultar um produto pelo seu código
-            const retornedProduct = await Product.findByPk(productId);
-            if(!retornedProduct) {
+            const returnedProduct = await Product.findByPk(productId);
+            if(!returnedProduct) {
                 return res.status(404).json({
                     message: 'Produto não encontrado',
                 })
@@ -240,7 +238,7 @@ class ProductController {
 
             return res.status(200).json({
                 message: 'Produto encontrado com sucesso',
-                data: retornedProduct,
+                data: returnedProduct,
             })
         } catch (error) {
             console.error(error);
@@ -258,18 +256,18 @@ class ProductController {
 
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
 
-             // Verificar se o productId é um valor numérico
-             if (isNaN(Number(productId))) {
+            // Verificar se o productId é um valor numérico
+            if (isNaN(Number(productId)) || productId <= 0) {
                 return response.status(400).send({
-                    message: "O id do produto deve possuir um valor numérico!" 
+                    message: "O id do produto deve possuir um valor numérico válido!" 
                 });
             }
 
             // Verificar se o pruduto existe
-            const retornedProduct =await Product.findByPk(productId);
-            if(!retornedProduct) {
+            const returnedProduct =await Product.findByPk(productId);
+            if(!returnedProduct) {
                 return res.status(400).json({
                     message: 'Produto não encontrado',
                 })
