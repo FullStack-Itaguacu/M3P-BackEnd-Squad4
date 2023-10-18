@@ -13,17 +13,17 @@ class ProductController {
             const decodedToken = await validaAuthorizationHeaders(authorization, res);
             
             // Pegar os dados do produto passados no corpo da requisição
-            const { product } = req.body;
+            const { name, labName, imageLink, dosage, unitPrice, typeProduct, totalStock } = req.body;
 
              // Validação dos campos obrigatórios
              const fieldValidations = [
-                validateField('name', product.name),
-                validateField('labName', product.labName),
-                validateField('imageLink', product.imageLink),
-                validateField('dosage', product.dosage),
-                validateField('unitPrice', product.unitPrice),
-                validateField('typeProduct', product.typeProduct),
-                validateField('totalStock', product.totalStock),
+                validateField('name', name),
+                validateField('labName', labName),
+                validateField('imageLink', imageLink),
+                validateField('dosage', dosage),
+                validateField('unitPrice', unitPrice),
+                validateField('typeProduct', typeProduct),
+                validateField('totalStock', totalStock),
             ]
 
              //Encontrar a primeira validação que falhe
@@ -43,7 +43,7 @@ class ProductController {
                 'Medicamento Controlado', 
                 'Medicamento Não Controlado'
             ]
-            if (!productType.includes(product.typeProduct)) {
+            if (!productType.includes(typeProduct)) {
                 return res.status(400).json({
                     message: 'Campo tipo do produto mal formatado',
                 });
@@ -51,13 +51,13 @@ class ProductController {
 
             // Criar um produto
             const newProduct = await Product.create({
-                name: product.name,
-                labName: product.labName,
-                imageLink: product.imageLink,
-                dosage: product.dosage,
-                unitPrice: product.unitPrice,
-                typeProduct: product.typeProduct,
-                totalStock: product.totalStock,
+                name: name,
+                labName: labName,
+                imageLink: imageLink,
+                dosage: dosage,
+                unitPrice: unitPrice,
+                typeProduct: typeProduct,
+                totalStock: totalStock,
                 userId: decodedToken.id,
             });
 
@@ -69,7 +69,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor.',
-                error: error.message,
+                cause: error.message,
             });     
         }
     }
@@ -121,7 +121,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um eroo no servidor',
-                error: error.message
+                cause: error.message
             })
         }
     }
@@ -133,7 +133,7 @@ class ProductController {
 
         try {
             // Verificar dados passados no headers
-            const decodedToken = await validaAuthorizationHeaders(authorization, res);
+            await validaAuthorizationHeaders(authorization, res);
 
             // Filtrar produtos com base no query params
             const filter = {};
@@ -173,7 +173,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })    
         }
     }
@@ -209,7 +209,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })
         }
     }
@@ -247,7 +247,7 @@ class ProductController {
             console.error(error);
             return res.status(500).json({
                 message: 'Ocorreu um erro no servidor',
-                error: error.message,
+                cause: error.message,
             })
         }
     }
