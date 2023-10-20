@@ -2,7 +2,8 @@ const { User } = require('../models/user');
 const {Product} = require('../models/product');
 const { 
     validaAuthorizationHeaders, 
-    validateField 
+    validateField, 
+    validaProductType
 } = require('../services/product.services');
 
 class ProductController {
@@ -66,11 +67,8 @@ class ProductController {
             }
 
             // Validar o campo typeProduct
-            const productType = [
-                'Medicamento Controlado', 
-                'Medicamento Não Controlado'
-            ]
-            if (!productType.includes(typeProduct)) {
+            const productTypeOk = validaProductType(typeProduct)
+            if(!productTypeOk) {
                 return res.status(400).json({
                     message: 'Campo tipo do produto mal formatado',
                     cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
@@ -115,6 +113,15 @@ class ProductController {
             const filter = {};
             if(name) {
                 filter.name = name;
+            }
+
+            // Validar o campo typeProduct
+            const productTypeOk = validaProductType(typeProduct)
+            if(!productTypeOk) {
+                return res.status(400).json({
+                    message: 'Campo tipo do produto mal formatado',
+                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
+                });
             }
             if(typeProduct) {
                 filter.typeProduct = typeProduct;
@@ -167,6 +174,15 @@ class ProductController {
             const filter = {};
             if(name) {
                 filter.name = name;
+            }
+
+            // Validar o campo typeProduct
+            const productTypeOk = validaProductType(typeProduct)
+            if(!productTypeOk) {
+                return res.status(400).json({
+                    message: 'Campo tipo do produto mal formatado',
+                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
+                });
             }
             if(typeProduct) {
                 filter.typeProduct = typeProduct;

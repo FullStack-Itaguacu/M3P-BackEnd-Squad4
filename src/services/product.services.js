@@ -27,6 +27,15 @@ class ProductServices {
     }
     return decodedToken;
   }
+
+  // Função para validar o campo typeProduct
+  validaProductType(field) {
+    const productType = ['Medicamento Controlado', 'Medicamento Não Controlado'];
+    if(!productType.includes(field)) {
+      return false;
+    }
+    return true;
+  }
    
   // Função para validar campos obrigatórios
   validateField(fieldName, fieldValue) {
