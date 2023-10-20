@@ -2,6 +2,7 @@ const { User } = require('../models/user');
 const { Sale } = require('../models/sales');
 const { verify } = require("jsonwebtoken");
 const { Product } = require('../models/product');
+const { connection } = require("../database/connection");
 
 
 class SaleController {
@@ -26,38 +27,27 @@ class SaleController {
                 message: 'Token inválido',
                 cause: error.message,
             });
-        }       
+        }
 
         try {
             const saleData = req.body;
             // Itere sobre cada objeto no vetor
-            for (const saleItem of saleData) {
-                const currentDateTime = new Date();
-                console.log("ID SaleItem "+saleItem.product_id)
-
-                const saller = User.findOne({
-                    include: [
-                      {
-                        model: Product,
-                        where: { id: saleItem.product_id }
-                      }
-                    ]
-                  });
-                console.log(saller);
-                const newSale = Sale.build({
-                    unitPrice: 1.80,
+            for (const saleItem of saleData) {                
+                console.log("ID SaleItem " + saleItem.product_id)
+                const sallerId = await Product.findOne({ where: { id: saleItem.product_id } })
+                console.log(sallerId.userId);
+                const newSale = await Sale.create({
+                    unitPrice: sallerId.unitPrice,
                     amountBuy: saleItem.amount_buy,
-                    total: 1.00,
+                    total: sallerId.unitPrice*saleItem.amount_buy,
                     typePayment: saleItem.type_payment,
                     buyerId: decodedToken.id,
-                    sellerId: 1,
+                    sellerId: sallerId.userId,
                     productId: saleItem.product_id,
-                    usersAddressesId: saleItem.users_addresses_id,
-                    created_at: currentDateTime,
-                    update_at: currentDateTime                   
+                    usersAddressesId: saleItem.users_addresses_id,                   
 
                 })
-               
+                console.log(newSale)
                 //await newSale.save();
             }
             res.status(201).json({ msg: 'Venda criada com sucesso' });
@@ -65,8 +55,7 @@ class SaleController {
         } catch (error) {
             console.error('Erro no controller de venda:', error);
             res.status(500).json({
-                error:
-                    { msg: 'Erro ao processar a requisição', details: error.message }
+                error: { msg: 'Erro ao processar a requisição', details: error.message }
             });
 
         }
