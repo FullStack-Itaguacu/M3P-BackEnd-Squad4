@@ -8,6 +8,7 @@ const {
 
 class ProductController {
     async createOneProduct(req, res) {
+        //#swagger.tags = ['product']
         const { authorization } = req.headers;
         try {
             // Verificar dados passados no headers
@@ -111,6 +112,7 @@ class ProductController {
     }
 
     async listAllProductsByUser(req, res) {
+        //#swagger.tags = ['product']
         const { authorization } = req.headers;
         const { offset, limit } = req.params;
         const { name, typeProduct, totalStock } = req.query;
@@ -185,6 +187,7 @@ class ProductController {
     }
 
     async listAllProducts(req, res) {
+        //#swagger.tags = ['product']
         const { authorization } = req.headers;
         const { offset, limit } = req.params;
         const { name, typeProduct, totalStock } = req.query;
@@ -259,6 +262,7 @@ class ProductController {
     }
 
     async listProductById(req, res) {
+        //#swagger.tags = ['product']
         const { authorization } = req.headers;
         const { productId } = req.params;
         
@@ -302,6 +306,7 @@ class ProductController {
     }
 
     async updateProductById(req, res) {
+        //#swagger.tags = ['product']
         const { authorization } = req.headers;
         const { productId } = req.params;
         const { name, imageLink, dosage, totalStock } = req.body;

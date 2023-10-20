@@ -3,6 +3,7 @@ const { User } = require("../models/user");
 
 class BuyerController {
   async listUserAddresses(req, res) {
+    //#swagger.tags = ['buyer']
     try {
       // Obtém o ID do usuário do payload do JWT
       const userId = req.user && req.user.id;
@@ -37,6 +38,7 @@ class BuyerController {
 
   //admin
   async listAllBuyers(req, res) {
+    //#swagger.tags = ['buyer']
     try {
       if (!req.user || req.user.type !== 'ADMIN') {
         return res.status(403).json({
@@ -97,6 +99,7 @@ class BuyerController {
 
   //admin
   async listBuyerById(req, res) {
+    //#swagger.tags = ['buyer']
     try {
       // Verifica se o usuário autenticado é um ADMIN
       if (!req.user || req.user.type !== 'ADMIN') {
@@ -136,6 +139,7 @@ class BuyerController {
 
   //admin
   async updateUser(req, res) {
+    //#swagger.tags = ['buyer']
     try {
    
       if (!req.user || req.user.type !== 'ADMIN') {
