@@ -39,17 +39,27 @@ class ProductController {
                 }); 
             }
 
-            // Verificar se o produto já foi cadastrado
-            const returnedProduct = await Product.findOne({
-                where: {fullName: fullName}
-            });
-            if(returnedProduct) {
-                return res.status(400).json({
-                    message: 'Produto já cadastrado',
-                    cause: error.message
-                })
+            // Verificar se o campo totalStock é um valor numérico
+            if (isNaN(Number(totalStock)) || totalStock < 0) {
+                return response.status(400).send({
+                    message: "O campo totalStock deve possuir um valor numérico válido!" 
+                });
             }
 
+            // Verificar se o produto já foi cadastrado
+            const returnedProduct = await Product.findOne({
+                where: {name: name, labName: labName}
+            });
+            if (returnedProduct) {
+                const newTotalStock = 0;
+                newTotalStock = returnedProduct.totalStock + totalStock;
+                await Product.update({ totalStock: newTotalStock });
+            
+                return res.status(200).json({
+                    message: 'Produto já cadastrado, totalStock atualizado'
+                });
+            }
+            
             // Validar o campo dosage
             const campoDosage = ['mg', 'g', 'mL', '%', 'Outro']
             if (!campoDosage.includes(dosage)) {
@@ -127,12 +137,25 @@ class ProductController {
                 filter.typeProduct = typeProduct;
             }
 
+            // Verificar se o campo totalStock é um valor numérico
+            if (isNaN(Number(totalStock)) || totalStock < 0) {
+                return response.status(400).send({
+                    message: "O campo totalStock deve possuir um valor numérico válido!" 
+                });
+            }
+
             // Ordenar pelo campo totalStock
             const order = [['total_stock', totalStock === 'asc' ? 'ASC' : 'DESC']];
 
-            // Configuração da paginação usando offset e limit
-            const valueOffset = parseInt(offset) || 0;
-            const valueLimit = parseInt(limit) || 20;
+            // Validar os campos offset e limit
+            const valueOffset = parseInt(offset);
+            const valueLimit = parseInt(limit);
+            if (isNaN(valueOffset) || isNaN(valueLimit) || valueLimit <= 0 || valueLimit > 20) {
+                return res.status(400).json({
+                    message: 'Parâmetros de paginação inválidos',
+                    cause: error.message
+                });
+            }
 
             // Consultar produtos cadastrados pelo administrador com base no seu id
             const productsByUserAdmin = await Product.findAndCountAll({
@@ -188,13 +211,26 @@ class ProductController {
                 filter.typeProduct = typeProduct;
             }
 
+            // Verificar se o campo totalStock é um valor numérico
+            if (isNaN(Number(totalStock)) || totalStock < 0) {
+                return response.status(400).send({
+                    message: "O campo totalStock deve possuir um valor numérico válido!" 
+                });
+            }
+
             // Ordenar pelo total do estoque
             const order = [['total_stock', totalStock === 'asc' ? 'ASC' : 'DESC']];
 
-            // Configuração da paginação usando offset e limit
-            const valueOffset = parseInt(offset) || 0;
-            const valueLimit = parseInt(limit) || 20;
-
+            // Validar os campos offset e limit
+            const valueOffset = parseInt(offset);
+            const valueLimit = parseInt(limit);
+            if (isNaN(valueOffset) || isNaN(valueLimit) || valueLimit <= 0 || valueLimit > 20) {
+                return res.status(400).json({
+                    message: 'Parâmetros de paginação inválidos',
+                    cause: error.message
+                });
+            }
+            
             // Consultar produtos com base no query params
             const allProducts = await Product.findAndCountAll({
                 where: filter,
@@ -274,6 +310,13 @@ class ProductController {
             // Verificar dados passados no headers
             await validaAuthorizationHeaders(authorization, res);
 
+            // Verificar se o id do produto foi passado por parametro
+            if(!productId) {
+                return res.status(401).json({
+                    message: 'Id do produto não fornecido',
+                })
+            }
+
             // Verificar se o productId é um valor numérico
             if (isNaN(Number(productId)) || productId <= 0) {
                 return response.status(400).send({
@@ -287,6 +330,13 @@ class ProductController {
                 return res.status(400).json({
                     message: 'Produto não encontrado',
                 })
+            }
+
+            // Verificar se o campo totalStock é um valor numérico
+            if (isNaN(Number(totalStock)) || totalStock < 0) {
+                return response.status(400).send({
+                    message: "O campo totalStock deve possuir um valor numérico válido!" 
+                });
             }
 
             const dataForUpdate = Object.assign(
