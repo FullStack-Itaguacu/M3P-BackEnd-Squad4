@@ -119,7 +119,7 @@ class UserController {
         complement,
         lat,
         long,
-      } = address;
+      } = address[0];
 
       // Verifica campos obrigatórios
       throwErrorIf(!fullName, "O campo nome é obrigatório.");
@@ -153,19 +153,6 @@ class UserController {
         return res.status(cpfValidation.status).json({ message: cpfValidation.message });
       }
 
-      // Cria o endereço.
-      const createdAddress = await Address.create({
-        zip,
-        street,
-        numberStreet,
-        neighborhood,
-        city,
-        state,
-        complement,
-        lat,
-        long,
-      });
-
       // Cria o usuário.
       const hashedPassword = await bcrypt.hash(password, 10); // Criptografe a senha.
       const createdUser = await User.create({
@@ -175,9 +162,12 @@ class UserController {
         email,
         phone,
         password: hashedPassword,
-        addressId: createdAddress.id,
         typeUser: 'Comprador',
       });
+
+      const addresses = await Address.bulkCreate(address);
+      const addressesIDs = addresses.map((item)=> item.id);
+      await createdUser.setAddresses(addressesIDs);
 
       return res.status(201).send({ message: "Usuário cadastrado com sucesso." });
     } catch (error) {
