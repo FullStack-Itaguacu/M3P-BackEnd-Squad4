@@ -73,10 +73,29 @@ class SaleController {
         }
     }
     async listSale(req, res) {
+        const { authorization } = req.headers;
+
+        if (!authorization) {
+            return res.status(401).json({
+                message: 'Acesso não autorizado. Token não foi fornecido'
+            });
+        }
+
+        let decodedToken;
+        try {
+            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+        } catch (error) {
+            return res.status(401).json({
+                message: 'Token inválido',
+                cause: error.message,
+            });
+        }
+        
         try {
 
-            const sales = await Sale.findAll();
-            //console.log(sales);
+            const sales = await Sale.findAll({ where: { buyerId: decodedToken.id } });
+
+            console.log(sales);
             res.status(200).json(sales);
 
         } catch (error) {
