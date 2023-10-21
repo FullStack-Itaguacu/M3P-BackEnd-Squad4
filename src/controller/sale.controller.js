@@ -18,10 +18,6 @@ class SaleController {
         let decodedToken;
         try {
             decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
-            /* console.log(decodedToken.id);
-            console.log(decodedToken.type_user);
-            console.log(decodedToken.full_name);
-            console.log(decodedToken.email); */
         } catch (error) {
             return res.status(401).json({
                 message: 'Token inválido',
@@ -31,24 +27,40 @@ class SaleController {
 
         try {
             const saleData = req.body;
-            // Itere sobre cada objeto no vetor
-            for (const saleItem of saleData) {                
-                console.log("ID SaleItem " + saleItem.product_id)
+            for (const saleItem of saleData) {
+
                 const sallerId = await Product.findOne({ where: { id: saleItem.product_id } })
-                console.log(sallerId.userId);
+
                 const newSale = await Sale.create({
                     unitPrice: sallerId.unitPrice,
                     amountBuy: saleItem.amount_buy,
-                    total: sallerId.unitPrice*saleItem.amount_buy,
+                    total: sallerId.unitPrice * saleItem.amount_buy,
                     typePayment: saleItem.type_payment,
                     buyerId: decodedToken.id,
                     sellerId: sallerId.userId,
                     productId: saleItem.product_id,
-                    usersAddressesId: saleItem.users_addresses_id,                   
+                    usersAddressesId: saleItem.users_addresses_id,
 
                 })
-                console.log(newSale)
-                //await newSale.save();
+                const productUpdate = {
+                    userId: sallerId.userId,
+                    name: sallerId.name,
+                    labName: sallerId.labName,
+                    imageLink: sallerId.imageLink,
+                    dosage: sallerId.dosage,
+                    unitPrice: sallerId.unitPrice,
+                    totalStock: sallerId.totalStock - saleItem.amount_buy,
+                    typeProduct: sallerId.typeProduct,
+                    description: sallerId.description
+
+                }
+
+                const whereCondition = {
+                    id: sallerId.id
+                };
+
+                await Product.update(productUpdate, { where: whereCondition });
+
             }
             res.status(201).json({ msg: 'Venda criada com sucesso' });
 
