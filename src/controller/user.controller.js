@@ -256,20 +256,6 @@ class UserController {
         return res.status(cpfValidation.status).json({ message: cpfValidation.message });
       }
 
-      // Verifica se já existe um usuário com o mesmo CPF ou e-mail
-      const existingUser = await User.findOne({
-        where: {
-          [Op.or]: [
-            { cpf: user.cpf },
-            { email: user.email }
-          ]
-        }
-      });
-
-      if (existingUser) {
-        return res.status(409).json({ message: "Usuário com CPF ou e-mail já cadastrado." });
-      }
-
       // Cria o endereço.
       const createdAddress = await Address.create({
         zip,
