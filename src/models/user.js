@@ -1,5 +1,6 @@
 const { connection } = require("../database/connection");
 const { INTEGER, STRING, DATEONLY, ENUM, DATE } = require("sequelize");
+const Address = require("./address");
 
 const User = connection.define(
   "user",
@@ -73,5 +74,11 @@ const User = connection.define(
   },
   { underscored: true, paranoid: true }
 );
+
+User.belongsToMany(Address, {
+  as: "addresses",
+  through: { model: "users_addresses" },
+  foreignKey: "user_id",
+});
 
 module.exports = { User };
