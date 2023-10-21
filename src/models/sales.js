@@ -1,5 +1,6 @@
 const { connection } = require("../database/connection");
 const { INTEGER, REAL, ENUM, DATE } = require("sequelize");
+const { Product } = require('../models/product')
 
 const Sale = connection.define(
   "sale",
@@ -10,11 +11,11 @@ const Sale = connection.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    unit_price: {
+    unitPrice: {
       type: REAL,
       allowNull: false,
     },
-    amount_buy: {
+    amountBuy: {
       type: INTEGER,
       allowNull: false,
     },
@@ -22,7 +23,7 @@ const Sale = connection.define(
       type: REAL,
       allowNull: false,
     },
-    type_payment: {
+    typePayment: {
       type: ENUM(
         "cartão de crédito",
         "cartão de débito",
@@ -32,7 +33,7 @@ const Sale = connection.define(
       ),
       allowNull: false,
     },
-    buyer_id: {
+    buyerId: {
       type: INTEGER,
       allowNull: false,
       references: {
@@ -40,7 +41,7 @@ const Sale = connection.define(
         key: "id",
       },
     },
-    seller_id: {
+    sellerId: {
       type: INTEGER,
       allowNull: false,
       references: {
@@ -48,7 +49,7 @@ const Sale = connection.define(
         key: "id",
       },
     },
-    product_id: {
+    productId: {
       type: INTEGER,
       allowNull: false,
       references: {
@@ -56,7 +57,7 @@ const Sale = connection.define(
         key: "id",
       },
     },
-    users_addresses_id: {
+    usersAddressesId: {
       type: INTEGER,
       allowNull: false,
       references: {
@@ -64,35 +65,17 @@ const Sale = connection.define(
         key: "id",
       },
     },
-    created_at: {
+    createdAt: {
       type: DATE,
       allowNull: false,
     },
-    update_at: {
+    updatedAt: {
       type: DATE,
       allowNull: false,
     },
   },
-  { underscored: true, paranoid: true }
+  { underscored: true, paranoid: true, timestamps: true }
 );
-
-// Sale.associate = (models) => {
-//   Sale.hasMany(models.User, { foreignKey: "buyer_id", as: "users" });
-// };
-
-// Sale.associate = (models) => {
-//   Sale.hasMany(models.User, { foreignKey: "seller_id", as: "users" });
-// };
-
-// Sale.associate = (models) => {
-//   Sale.hasMany(models.Product, { foreignKey: "product_id", as: "produtcs" });
-// };
-
-// Sale.associate = (models) => {
-//   Sale.hasMany(models.address, {
-//     foreignKey: "users_addresses_id",
-//     as: "addresses",
-//   });
-// };
+Sale.belongsTo(Product)
 
 module.exports = { Sale };
