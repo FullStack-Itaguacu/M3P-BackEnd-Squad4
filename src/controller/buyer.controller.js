@@ -4,37 +4,42 @@ const { User } = require("../models/user");
 class BuyerController {
   async listUserAddresses(req, res) {
     try {
-      // Obtém o ID do usuário do payload do JWT
-      const userId = req.user && req.user.id;
 
-      // Verifica se o ID do usuário é válido
-      if (!userId || isNaN(userId) || userId <= 0) {
-        return res.status(400).send({
-          msg: "O ID do usuário deve ser um número válido",
-        });
-      }
-
-      const userAddresses = await Address.findAll({ where: { userId } });
-
-      if (!userAddresses || userAddresses.length === 0) {
-        return res.status(200).send({
-          msg: "O usuário não tem endereços cadastrados",
-        });
-      }
-
-      return res.status(200).send(userAddresses);
+      const users = await User.findAll({
+        include: 'addresses', 
+      });
+  
+      // Extract addresses from all users
+      const allAddresses = users.reduce((addresses, user) => {
+        if (user.addresses && user.addresses.length > 0) {
+          addresses.push(...user.addresses.map(address => ({
+            id: address.id,
+            zip: address.zip,
+            street: address.street,
+            numberStreet: address.numberStreet, 
+            city: address.city,
+            state: address.state,
+            complement: address.complement,
+            lat: address.lat,
+            long: address.long,
+          })));
+        }
+        return addresses;
+      }, []);
+  
+      return res.status(200).json(allAddresses);
     } catch (error) {
-      console.error('Error in listUserAddresses:', error); 
-      
-      return res.status(500).json({
+      console.error('Error in listUserAddresses:', error);
+  
+      return res.status(400).json({
         error: {
-          msg: 'Erro ao processar a requisição',
+          msg: 'Error processing the request',
           details: error.message,
         },
       });
     }
   }
-
+  
   //admin
   async listAllBuyers(req, res) {
     try {
