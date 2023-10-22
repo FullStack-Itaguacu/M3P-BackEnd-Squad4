@@ -43,54 +43,49 @@ class BuyerController {
   //admin
   async listAllBuyers(req, res) {
     try {
-      if (!req.user || req.user.type !== 'ADMIN') {
-        return res.status(403).json({
-          msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
-        });
-      }
-
       const { offset, limit } = req.params;
       const { fullName, createdAt } = req.query;
-
+  
       const parsedOffset = parseInt(offset);
       const parsedLimit = parseInt(limit);
-
+  
       if (isNaN(parsedOffset) || isNaN(parsedLimit) || parsedLimit <= 0) {
         return res.status(400).json({
           msg: 'Parâmetros de paginação inválidos',
         });
       }
-
+  //encontrar todos compradores
       const query = {
-        type: 'BUYER',
+        typeUser: 'Comprador',
       };
-
+  
       if (fullName) {
         query.fullName = { $regex: new RegExp(fullName, 'i') };
       }
-
-      const sortOrder = createdAt === 'asc' ? 1 : -1;
-
+  
+      const sortOrder = createdAt === 'asc' ? 'ASC' : 'DESC';
+  
       const users = await User.findAll({
         where: query,
         order: [['createdAt', sortOrder]],
         offset: parsedOffset,
         limit: Math.min(parsedLimit, 20),
       });
-
+  
+      const count = await User.count({ where: query }); 
       if (users.length === 0) {
         return res.status(204).json({
           msg: 'Nenhum usuário encontrado',
         });
       }
-
+  
       return res.status(200).json({
-        count: await User.countDocuments(query),
+        count,
         users,
       });
     } catch (error) {
-      console.error('Error in listAllBuyers:', error); 
-
+      console.error('Error in listAllBuyers:', error);
+  
       return res.status(500).json({
         error: {
           msg: 'Erro ao processar a requisição',
@@ -99,6 +94,9 @@ class BuyerController {
       });
     }
   }
+  
+  
+  
 
   //admin
   async listBuyerById(req, res) {
