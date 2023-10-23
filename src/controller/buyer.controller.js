@@ -99,6 +99,7 @@ class BuyerController {
   
   //admin
   async getUserById(req, res) {
+    //#swagger.tags = ['buyer']
     try {
       const userId = req.params.userId;
   
