@@ -9,6 +9,7 @@ const { throwErrorIf, validatePassword, validatePhone, validateCPF } = require('
 class UserController {
 
   async loginUser(req, res) {
+    //#swagger.tags = ['user']
     try {
       const { email, password } = req.body;
 
@@ -53,6 +54,7 @@ class UserController {
   }
 
   async loginAdminUser(req, res) {
+    //#swagger.tags = ['user']
     try {
       const { email, password } = req.body;
 
@@ -97,6 +99,7 @@ class UserController {
   }
 
   async buyerSignup(req, res) {
+    //#swagger.tags = ['user']
     try {
       const { user, address } = req.body;
 
@@ -188,6 +191,7 @@ class UserController {
   }
 
   async adminSignup(req, res) {
+    //#swagger.tags = ['user']
     try {
       const { user, address } = req.body;
 
