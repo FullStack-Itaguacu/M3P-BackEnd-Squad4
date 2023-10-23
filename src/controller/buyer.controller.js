@@ -4,6 +4,7 @@ const { validateEmail, validateCPF, validatePhone } = require('../services/buyer
 
 class BuyerController {
   async listUserAddresses(req, res) {
+    //#swagger.tags = ['buyer']
     try {
 
       const users = await User.findAll({
@@ -43,6 +44,7 @@ class BuyerController {
   
   //admin
   async listAllBuyers(req, res) {
+    //#swagger.tags = ['buyer']
     try {
       const { offset, limit } = req.params;
       const { fullName, createdAt } = req.query;
