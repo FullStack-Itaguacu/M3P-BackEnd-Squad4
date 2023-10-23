@@ -4,7 +4,7 @@ const {
   listUserAddresses,
   listAllBuyers,
   getUserById,
-  updateUser,
+  updateBuyer,
 } = require("../controller/buyer.controller");
 
 class BuyerRouter {
@@ -13,7 +13,7 @@ class BuyerRouter {
     buyerRoutes.get("/buyers/address", auth, listUserAddresses);
     buyerRoutes.get("/buyers/admin/:offset/:limit", auth, listAllBuyers);
     buyerRoutes.get("/buyers/admin/:userId", auth, getUserById);
-    buyerRoutes.patch("/buyers/admin/:userId", auth, updateUser);
+    buyerRoutes.patch("/buyers/admin/:userId", auth, updateBuyer);
     return buyerRoutes;
   }
 }

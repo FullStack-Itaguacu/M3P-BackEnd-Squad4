@@ -1,5 +1,6 @@
 const { Address } = require("../models/address");
 const { User } = require("../models/user");
+const { validateEmail, validateCPF, validatePhone } = require('../services/buyer.services');
 
 class BuyerController {
   async listUserAddresses(req, res) {
@@ -132,85 +133,77 @@ class BuyerController {
   };
   
   //admin
-  async updateUser(req, res) {
+  async updateBuyer(req, res) {
     try {
-   
-      if (!req.user || req.user.type !== 'ADMIN') {
-        return res.status(403).json({
-          msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
-        });
-      }
+        const userId = req.params.userId;
+        const { fullName, email, cpf, phone, typeUser } = req.body;
 
-      const userId = req.params.userId;
-
-      if (!userId) {
-        return res.status(400).json({
-          msg: 'Parâmetro userId inválido',
-        });
-      }
-
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({
-          msg: 'Usuário não encontrado',
-        });
-      }
-
-      const { fullName, email, cpf, phone, typeUser } = req.body;
-
-      if (fullName !== undefined && fullName !== '') {
-        user.fullName = fullName;
-      }
-
-      if (email !== undefined && email !== '') {
-        //verificar a lógica de email???
-
-        user.email = email;
-      }
-
-      if (cpf !== undefined && cpf !== '') {
-        //remove caracteres especiais do cpf com replace
-        user.cpf = cpf.replace(/[^\d]/g, '');
-      }
-
-      if (phone !== undefined && phone !== '') {
-
-        const parsedPhone = parseInt(phone);
-        if (!isNaN(parsedPhone) && parsedPhone >= 0) {
-          user.phone = parsedPhone.toString();
-        } else {
-          return res.status(422).json({
-            msg: 'Campo phone inválido',
-          });
+        if (isNaN(userId) || userId <= 0) {
+            return res.status(400).json({
+                msg: 'ID do usuário inválido',
+            });
         }
-      }
 
-      if (typeUser !== undefined && typeUser !== '') {
+        const user = await User.findByPk(userId);
 
-        if (user.type !== 'ADMIN' || typeUser === 'ADMIN') {
-          user.type = typeUser;
-        } else {
-          return res.status(422).json({
-            msg: 'Não é permitido trocar de ADMIN para BUYER',
-          });
+        if (!user || user.typeUser !== 'Comprador') {
+            return res.status(404).json({
+                msg: 'Usuário comprador não encontrado',
+            });
         }
-      }
 
-      await user.save();
+        if (fullName != null && typeof fullName !== 'string') {
+            return res.status(422).json({
+                msg: 'Campo fullName deve ser uma string',
+            });
+        }
 
-      return res.status(204).send();
+        if (email != null && !validateEmail(email)) {
+            return res.status(422).json({
+                msg: 'Email inválido',
+            });
+        }
+
+        if (cpf != null && !validateCPF(cpf)) {
+            return res.status(422).json({
+                msg: 'CPF inválido',
+            });
+        }
+
+        if (phone != null && !validatePhone(phone)) {
+            return res.status(422).json({
+                msg: 'Campo phone deve ser um número positivo',
+            });
+        }
+
+        if (typeUser != null && typeUser !== 'Comprador') {
+            return res.status(422).json({
+                msg: 'A troca de tipo de usuário só é permitida para "Comprador"',
+            });
+        }
+
+        if (fullName != null) user.fullName = fullName;
+        if (email != null) user.email = email;
+        if (cpf != null) user.cpf = cpf;
+        if (phone != null) user.phone = phone;
+        if (typeUser != null) user.typeUser = typeUser;
+
+        await user.save();
+
+        return res.status(204).send();
     } catch (error) {
-      console.error('Error in updateUser:', error);
+        console.error('Error in updateBuyer:', error);
 
-      return res.status(500).json({
-        error: {
-          msg: 'Erro ao processar a requisição',
-          details: error.message,
-        },
-      });
+        // Trate erros específicos aqui, se possível
+        return res.status(500).json({
+            error: {
+                msg: 'Erro ao processar a requisição',
+                details: error.message,
+            },
+        });
     }
-  }
+};
+
 }
 
 module.exports = new BuyerController();
