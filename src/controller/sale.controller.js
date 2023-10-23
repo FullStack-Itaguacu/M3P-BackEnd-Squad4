@@ -6,7 +6,7 @@ const { jwt_secret_key } = require('../config/database.config');
 
 class SaleController {
     async createOneSale(req, res) {
-        //#swagger.tags = ['sale']
+        //#swagger.tags = ['Sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -73,7 +73,7 @@ class SaleController {
         }
     }
     async listSale(req, res) {
-        //#swagger.tags = ['sale']
+        //#swagger.tags = ['Sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -109,7 +109,7 @@ class SaleController {
     }
 
     async listSaleByAdmin(req, res) {
-        //#swagger.tags = ['sale']
+        //#swagger.tags = ['Sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -150,7 +150,7 @@ class SaleController {
         }
     }
     async listResultByAdmin(req, res) {
-        //#swagger.tags = ['sale']
+        //#swagger.tags = ['Sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
