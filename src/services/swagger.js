@@ -3,8 +3,8 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         version: '1.0.0',
-        title: 'LabPharmacy API',
-        description: 'Documentação da API LabPharmacy para gerenciamento de farmácias.',
+        title: 'Pharmacy Central System API',
+        description: 'Documentação da Pharmacy Central System API para gerenciamento de usuários, medicamentos e vendas.',
     },
     host: 'localhost:3333',
     basePath: '/',
