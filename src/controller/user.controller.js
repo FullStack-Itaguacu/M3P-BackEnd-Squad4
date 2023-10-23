@@ -1,7 +1,6 @@
 const { User } = require('../models/user');
 const Address = require('../models/address');
 const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
 const { sign } = require('jsonwebtoken');
 const { jwt_secret_key } = require('../config/database.config');
 const { throwErrorIf, validatePassword, validatePhone, validateCPF } = require('../services/user.services')
