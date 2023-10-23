@@ -1,8 +1,7 @@
-const { User } = require('../models/user');
 const { Sale } = require('../models/sales');
 const { verify } = require("jsonwebtoken");
 const { Product } = require('../models/product');
-const { connection } = require("../database/connection");
+const { jwt_secret_key } = require('../config/database.config');
 
 
 class SaleController {
@@ -18,7 +17,7 @@ class SaleController {
 
         let decodedToken;
         try {
-            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+            decodedToken = verify(authorization, jwt_secret_key);
         } catch (error) {
             return res.status(401).json({
                 message: 'Token inválido',
@@ -85,7 +84,7 @@ class SaleController {
 
         let decodedToken;
         try {
-            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+            decodedToken = verify(authorization, jwt_secret_key);
         } catch (error) {
             return res.status(401).json({
                 message: 'Token inválido',
@@ -121,7 +120,7 @@ class SaleController {
 
         let decodedToken;
         try {
-            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+            decodedToken = verify(authorization, jwt_secret_key);
         } catch (error) {
             return res.status(401).json({
                 message: 'Token inválido',
@@ -132,7 +131,7 @@ class SaleController {
         if (decodedToken.type_user !== "Administrador") {
             console.log(decodedToken.type_user)
             return res.status(403).json({
-                message: 'Acesso Restrico a user type: ADMIN'
+                message: 'Acesso restrito a user type: ADMIN'
             });
         }
 
@@ -162,7 +161,7 @@ class SaleController {
 
         let decodedToken;
         try {
-            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+            decodedToken = verify(authorization, jwt_secret_key);
         } catch (error) {
             return res.status(401).json({
                 message: 'Token inválido',
@@ -173,7 +172,7 @@ class SaleController {
         if (decodedToken.type_user !== "Administrador") {
             
             return res.status(403).json({
-                message: 'Acesso Restrico a user type: ADMIN'
+                message: 'Acesso restrito a user type: ADMIN'
             });
         }
 
