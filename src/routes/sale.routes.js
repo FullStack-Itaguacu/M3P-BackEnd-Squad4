@@ -10,7 +10,7 @@ class SaleRouter {
         saleRoutes.post('/sales/',auth, createOneSale);
         saleRoutes.get('/sales/',auth, listSale);
         saleRoutes.get('/sales/admin',auth, listSaleByAdmin);
-        saleRoutes.get('/sales/admin',auth, listResultByAdmin);
+        saleRoutes.get('/sales/dashboard/admin',auth, listResultByAdmin);
        
         return saleRoutes;
     }

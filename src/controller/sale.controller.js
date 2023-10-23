@@ -65,7 +65,7 @@ class SaleController {
             res.status(201).json({ msg: 'Venda criada com sucesso' });
 
         } catch (error) {
-            console.error('Erro no controller de venda:', error);
+            
             res.status(500).json({
                 error: { msg: 'Erro ao processar a requisição', details: error.message }
             });
@@ -90,7 +90,7 @@ class SaleController {
                 cause: error.message,
             });
         }
-        
+
         try {
 
             const sales = await Sale.findAll({ where: { buyerId: decodedToken.id } });
@@ -108,17 +108,96 @@ class SaleController {
     }
 
     async listSaleByAdmin(req, res) {
+        const { authorization } = req.headers;
+
+        if (!authorization) {
+            return res.status(401).json({
+                message: 'Acesso não autorizado. Token não foi fornecido'
+            });
+        }
+
+        let decodedToken;
+        try {
+            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+        } catch (error) {
+            return res.status(401).json({
+                message: 'Token inválido',
+                cause: error.message,
+            });
+        }
+        console.log(decodedToken.type_user)
+        if (decodedToken.type_user !== "Administrador") {
+            console.log(decodedToken.type_user)
+            return res.status(403).json({
+                message: 'Acesso Restrico a user type: ADMIN'
+            });
+        }
+
         try {
 
-        } catch (error) {
+            const sales = await Sale.findAll({ where: { sellerId: decodedToken.id } });
+            console.log(sales);
+            res.status(200).json(sales);
 
+        } catch (error) {
+            console.error('Erro no controller de venda:', error);
+            res.status(500).json({
+                error:
+                    { msg: 'Erro ao processar a requisição', details: error.message }
+            });
         }
     }
     async listResultByAdmin(req, res) {
+        const { authorization } = req.headers;
+
+        if (!authorization) {
+            return res.status(401).json({
+                message: 'Acesso não autorizado. Token não foi fornecido'
+            });
+        }
+
+        let decodedToken;
+        try {
+            decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+        } catch (error) {
+            return res.status(401).json({
+                message: 'Token inválido',
+                cause: error.message,
+            });
+        }
+      
+        if (decodedToken.type_user !== "Administrador") {
+            
+            return res.status(403).json({
+                message: 'Acesso Restrico a user type: ADMIN'
+            });
+        }
+
         try {
 
-        } catch (error) {
+            const sales = await Sale.findAll({ where: { sellerId: decodedToken.id } });
+            console.log(sales);
+            let totalSales = 0;
+            let totalAmount = 0;
+            for (const saleItem of sales) {
+                totalSales += saleItem.total;
+                totalAmount += saleItem.amountBuy;
+            }
 
+            const result = {
+                totalSales: totalSales,
+                totalAmount: totalAmount
+            };
+            res.status(200).json(result);
+
+
+
+        } catch (error) {
+            console.error('Erro no controller de venda:', error);
+            res.status(500).json({
+                error:
+                    { msg: 'Erro ao processar a requisição', details: error.message }
+            });
         }
     }
 
