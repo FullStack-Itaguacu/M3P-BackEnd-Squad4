@@ -95,39 +95,33 @@ class BuyerController {
     }
   }
   
-  
-  
-
   //admin
-  async listBuyerById(req, res) {
+  async getUserById(req, res) {
     try {
-      // Verifica se o usuário autenticado é um ADMIN
-      if (!req.user || req.user.type !== 'ADMIN') {
-        return res.status(403).json({
-          msg: 'Acesso negado. Este endpoint só pode ser utilizado por um usuário ADMIN.',
-        });
-      }
-
       const userId = req.params.userId;
-
-      if (!userId || isNaN(userId) || userId <= 0) {
+  
+      // Verifica se o userId é um número válido
+      if (isNaN(userId) || userId <= 0) {
         return res.status(400).json({
-          msg: 'Parâmetro userId inválido',
+          msg: 'ID do usuário inválido',
         });
       }
-
+  
+      // Busca o usuário pelo ID
       const user = await User.findByPk(userId);
-
+  
+      // Verifica se o usuário foi encontrado
       if (!user) {
         return res.status(404).json({
           msg: 'Usuário não encontrado',
         });
       }
-
+  
+      // Retorna os detalhes do usuário
       return res.status(200).json(user);
     } catch (error) {
-      console.error('Error in listBuyerById:', error);
-
+      console.error('Error in getUserById:', error);
+  
       return res.status(500).json({
         error: {
           msg: 'Erro ao processar a requisição',
@@ -135,8 +129,8 @@ class BuyerController {
         },
       });
     }
-  }
-
+  };
+  
   //admin
   async updateUser(req, res) {
     try {
