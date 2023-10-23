@@ -3,7 +3,7 @@ const { auth } = require("../middleware/auth");
 const {
   listUserAddresses,
   listAllBuyers,
-  listBuyerById,
+  getUserById,
   updateUser,
 } = require("../controller/buyer.controller");
 
@@ -12,7 +12,7 @@ class BuyerRouter {
     const buyerRoutes = Router();
     buyerRoutes.get("/buyers/address", auth, listUserAddresses);
     buyerRoutes.get("/buyers/admin/:offset/:limit", auth, listAllBuyers);
-    buyerRoutes.get("/buyers/admin/:userId", auth, listBuyerById);
+    buyerRoutes.get("/buyers/admin/:userId", auth, getUserById);
     buyerRoutes.patch("/buyers/admin/:userId", auth, updateUser);
     return buyerRoutes;
   }
