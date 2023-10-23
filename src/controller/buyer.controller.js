@@ -11,7 +11,6 @@ class BuyerController {
         include: 'addresses', 
       });
   
-      // Extract addresses from all users
       const allAddresses = users.reduce((addresses, user) => {
         if (user.addresses && user.addresses.length > 0) {
           addresses.push(...user.addresses.map(address => ({
