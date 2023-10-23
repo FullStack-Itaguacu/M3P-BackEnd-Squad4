@@ -7,6 +7,7 @@ const { connection } = require("../database/connection");
 
 class SaleController {
     async createOneSale(req, res) {
+        //#swagger.tags = ['sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -73,6 +74,7 @@ class SaleController {
         }
     }
     async listSale(req, res) {
+        //#swagger.tags = ['sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -108,6 +110,7 @@ class SaleController {
     }
 
     async listSaleByAdmin(req, res) {
+        //#swagger.tags = ['sale']
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -148,6 +151,7 @@ class SaleController {
         }
     }
     async listResultByAdmin(req, res) {
+        //#swagger.tags = ['sale']
         const { authorization } = req.headers;
 
         if (!authorization) {

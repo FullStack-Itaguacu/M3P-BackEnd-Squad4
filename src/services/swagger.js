@@ -59,6 +59,20 @@ const doc = {
                 total_stock: { type: 'integer', example: 18 },
             },
         },
+        Sale: {
+            type: 'object',
+            properties: {
+                id: { type: 'integer', example: 5 },
+                unitPrice: { type: 'real', example: 10.00 },
+                amountBuy: { type: 'integer', example: 200 },
+                total: { type: 'real', example: 20.00 },
+                typePayment: { type: 'string', example: 'PIX'},
+                buyerId: { type: 'integer', example: 20 },
+                sellerId: { type: 'integer', example: 15 },
+                productId: { type: 'integer', example: 3},
+                usersAddressesId: { type: 'integer', example: 18 },
+            },
+        },
     },
 };
 
