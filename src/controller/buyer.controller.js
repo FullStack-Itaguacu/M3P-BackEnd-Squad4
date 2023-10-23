@@ -3,7 +3,7 @@ const { User } = require("../models/user");
 
 class BuyerController {
   async listUserAddresses(req, res) {
-    //#swagger.tags = ['buyer']
+    //#swagger.tags = ['Buyer']
     try {
 
       const users = await User.findAll({
@@ -43,7 +43,7 @@ class BuyerController {
   
   //admin
   async listAllBuyers(req, res) {
-    //#swagger.tags = ['buyer']
+    //#swagger.tags = ['Buyer']
     try {
       const { offset, limit } = req.params;
       const { fullName, createdAt } = req.query;
@@ -99,7 +99,7 @@ class BuyerController {
   
   //admin
   async getUserById(req, res) {
-    //#swagger.tags = ['buyer']
+    //#swagger.tags = ['Buyer']
     try {
       const userId = req.params.userId;
   
@@ -136,7 +136,7 @@ class BuyerController {
   
   //admin
   async updateUser(req, res) {
-    //#swagger.tags = ['buyer']
+    //#swagger.tags = ['Buyer']
     try {
    
       if (!req.user || req.user.type !== 'ADMIN') {
