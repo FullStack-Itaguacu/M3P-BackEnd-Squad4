@@ -1,7 +1,6 @@
 const { User } = require('../models/user');
 const Address = require('../models/address');
 const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
 const { sign } = require('jsonwebtoken');
 const { jwt_secret_key } = require('../config/database.config');
 const { throwErrorIf, validatePassword, validatePhone, validateCPF } = require('../services/user.services')
@@ -9,7 +8,7 @@ const { throwErrorIf, validatePassword, validatePhone, validateCPF } = require('
 class UserController {
 
   async loginUser(req, res) {
-    //#swagger.tags = ['user']
+    //#swagger.tags = ['User']
     try {
       const { email, password } = req.body;
 
@@ -54,7 +53,7 @@ class UserController {
   }
 
   async loginAdminUser(req, res) {
-    //#swagger.tags = ['user']
+    //#swagger.tags = ['User']
     try {
       const { email, password } = req.body;
 
@@ -99,7 +98,7 @@ class UserController {
   }
 
   async buyerSignup(req, res) {
-    //#swagger.tags = ['user']
+    //#swagger.tags = ['User']
     try {
       const { user, address } = req.body;
 
@@ -191,7 +190,7 @@ class UserController {
   }
 
   async adminSignup(req, res) {
-    //#swagger.tags = ['user']
+    //#swagger.tags = ['User']
     try {
       const { user, address } = req.body;
 
