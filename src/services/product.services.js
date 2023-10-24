@@ -12,7 +12,7 @@ class ProductServices {
     }
     let decodedToken;
     try {
-      decodedToken = verify(authorization, process.env.SECRET_JWT);
+      decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
     } catch (error) {
       return res.status(401).json({
         message: 'Token inválido',
@@ -20,7 +20,7 @@ class ProductServices {
       }); 
     }
     const user = await User.findByPk(decodedToken.id);
-    if(!user || user.typeUser !== 'ADMIN') {
+    if(!user || user.typeUser !== 'Administrador') {
       return res.status(403).json({
         message: 'Acesso não autorizado, você não é um administrador',
       });
