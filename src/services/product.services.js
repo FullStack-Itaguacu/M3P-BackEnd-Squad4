@@ -1,5 +1,6 @@
 const { verify } = require("jsonwebtoken");
 const { User } = require("../models/user");
+const { jwt_secret_key } = require("../config/database.config")
 
 
 class ProductServices {
@@ -12,7 +13,7 @@ class ProductServices {
     }
     let decodedToken;
     try {
-      decodedToken = verify(authorization, process.env.SECRET_JWT);
+      decodedToken = verify(authorization, jwt_secret_key);
     } catch (error) {
       return res.status(401).json({
         message: 'Token inválido',
@@ -20,7 +21,7 @@ class ProductServices {
       }); 
     }
     const user = await User.findByPk(decodedToken.id);
-    if(!user || user.typeUser !== 'ADMIN') {
+    if(!user || user.typeUser !== 'Administrador') {
       return res.status(403).json({
         message: 'Acesso não autorizado, você não é um administrador',
       });
