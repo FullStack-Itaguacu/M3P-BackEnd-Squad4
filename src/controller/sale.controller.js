@@ -1,7 +1,7 @@
 const { Sale } = require('../models/sales');
 const { verify } = require("jsonwebtoken");
 const { Product } = require('../models/product');
-const { jwt_secret_key } = require('../config/database.config');
+const { jwt_secret_key } = require('../config/env');
 
 
 class SaleController {

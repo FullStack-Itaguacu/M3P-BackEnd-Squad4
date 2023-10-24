@@ -2,7 +2,7 @@ const { User } = require('../models/user');
 const Address = require('../models/address');
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
-const { jwt_secret_key } = require('../config/database.config');
+const { jwt_secret_key } = require('../config/env');
 const { throwErrorIf, validatePassword, validatePhone, validateCPF } = require('../services/user.services')
 
 class UserController {
