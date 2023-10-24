@@ -1,14 +1,8 @@
 const { config } = require("dotenv");
 config();
 
-const {
-  DATABASE_URL,
-  USERNAMEDB,
-  PASSWORDDB,
-  DATABASE,
-  HOST,
-  DIALECT,
-} = process.env;
+const { DATABASE_URL, USERNAMEDB, PASSWORDDB, DATABASE, HOST, DIALECT } =
+  process.env;
 
 module.exports = {
   url: DATABASE_URL,
@@ -17,8 +11,8 @@ module.exports = {
   database: DATABASE,
   host: HOST,
   dialect: DIALECT,
-    define: {
-      underscored: true,
-      underscoredAll: true,
+  define: {
+    underscored: true,
+    underscoredAll: true,
   },
 };
