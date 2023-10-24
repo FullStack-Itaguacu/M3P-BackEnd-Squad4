@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { connection } = require("./database/connection");
 const routes = require("./routes");
+const { server_port } = require("./config/database.config");
 
 class Server {
   constructor(app = express()) {
@@ -12,8 +13,9 @@ class Server {
   }
 
   async initializeServer(app) {
-    const port = 3333;
-    app.listen(port, () => console.log(`Servidor escutando na porta ${port}.`));
+    app.listen(server_port, () =>
+      console.log(`Servidor escutando na porta ${server_port}.`)
+    );
   }
 
   async middlewares(app) {
