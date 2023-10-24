@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm i && npx sequelize-cli db:migrate && npm run start:swagger",
     "start": "node src/",
     "start:dev": "nodemon src/",
     "start:swagger": "node src/services/swagger.js"
