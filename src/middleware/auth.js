@@ -1,5 +1,5 @@
 const { verify } = require("jsonwebtoken");
-const { jwt_secret_key } = require("../config/database.config");
+const { jwt_secret_key } = require("../config/env");
 
 async function auth(request, response, next) {
   try {

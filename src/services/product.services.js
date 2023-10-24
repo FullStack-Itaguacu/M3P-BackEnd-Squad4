@@ -1,6 +1,6 @@
 const { verify } = require("jsonwebtoken");
 const { User } = require("../models/user");
-const { jwt_secret_key } = require("../config/database.config")
+const { jwt_secret_key } = require("../config/env")
 
 
 class ProductServices {

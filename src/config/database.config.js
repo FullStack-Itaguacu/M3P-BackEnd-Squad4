@@ -1,16 +1,24 @@
 const { config } = require("dotenv");
 config();
 
-const { DIALECT, HOST, USERNAMEDB, PASSWORDDB, DATABASE, PORT, JWT_SECRET_KEY } = process.env;
+const {
+  DATABASE_URL,
+  USERNAMEDB,
+  PASSWORDDB,
+  DATABASE,
+  HOST,
+  DIALECT,
+  PORTDB,
+} = process.env;
 
 module.exports = {
-  dialect: DIALECT,
-  host: HOST,
+  url: DATABASE_URL,
   username: USERNAMEDB,
   password: PASSWORDDB,
   database: DATABASE,
-  port: PORT,
-  jwt_secret_key: JWT_SECRET_KEY,
+  host: HOST,
+  dialect: DIALECT,
+  port: PORTDB,
   define: {
     underscored: true,
     underscoredAll: true,
