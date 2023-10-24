@@ -3,8 +3,8 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         version: '1.0.0',
-        title: 'LabPharmacy API',
-        description: 'Documentação da API LabPharmacy para gerenciamento de farmácias.',
+        title: 'Pharmacy Central System API',
+        description: 'Documentação da Pharmacy Central System API para gerenciamento de usuários, medicamentos e vendas.',
     },
     host: 'localhost:3333',
     basePath: '/',
@@ -57,6 +57,20 @@ const doc = {
                 unit_price: { type: 'number', example: 100.15 },
                 type_product: { type: 'string', example: 'Medicamento Controlado'},
                 total_stock: { type: 'integer', example: 18 },
+            },
+        },
+        Sale: {
+            type: 'object',
+            properties: {
+                id: { type: 'integer', example: 5 },
+                unitPrice: { type: 'real', example: 10.00 },
+                amountBuy: { type: 'integer', example: 200 },
+                total: { type: 'real', example: 20.00 },
+                typePayment: { type: 'string', example: 'PIX'},
+                buyerId: { type: 'integer', example: 20 },
+                sellerId: { type: 'integer', example: 15 },
+                productId: { type: 'integer', example: 3},
+                usersAddressesId: { type: 'integer', example: 18 },
             },
         },
     },
