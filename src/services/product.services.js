@@ -1,5 +1,6 @@
 const { verify } = require("jsonwebtoken");
 const { User } = require("../models/user");
+const { jwt_secret_key } = require("../config/database.config")
 
 
 class ProductServices {
@@ -12,7 +13,7 @@ class ProductServices {
     }
     let decodedToken;
     try {
-      decodedToken = verify(authorization, process.env.JWT_SECRET_KEY);
+      decodedToken = verify(authorization, jwt_secret_key);
     } catch (error) {
       return res.status(401).json({
         message: 'Token inválido',
