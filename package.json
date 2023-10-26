@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "18.18.0"
+  },
   "scripts": {
     "build": "npm i && npx sequelize-cli db:migrate && npm run start:swagger",
     "start": "node src/",
