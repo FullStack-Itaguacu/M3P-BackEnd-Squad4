@@ -258,7 +258,7 @@ class UserController {
         email,
         phone,
         password: hashedPassword,
-        typeUser: 'Administrador',
+        typeUser,
       });
 
       const addresses = await Address.bulkCreate(address);
