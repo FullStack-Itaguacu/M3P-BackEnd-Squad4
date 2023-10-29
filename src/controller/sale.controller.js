@@ -94,24 +94,8 @@ class SaleController {
 
         try {
             const sales = await Sale.findAll({ where: { buyerId: decodedToken.id } });
-            const results = [];
-            for (let i = 0; i < sales.length; i++) {
-                const sale = sales[i];
-                const product = await Product.findOne({ where: { id: sale.productId } });
-
-                if (product) {
-                    const result = {
-                        imageLink: product.imageLink,
-                        productName: product.name,
-                        amountBuy: sale.amountBuy,
-                        unitPrice: sale.unitPrice,
-                        total: sale.amountBuy * sale.unitPrice
-                    };
-                    results.push(result);
-                }
-            }
-
-            res.status(200).json(results);
+          
+            res.status(200).json(sales);
 
         } catch (error) {
             res.status(500).json({
