@@ -94,7 +94,7 @@ class SaleController {
 
         try {
             const sales = await Sale.findAll({ where: { buyerId: decodedToken.id } });
-          
+
             res.status(200).json(sales);
 
         } catch (error) {
@@ -135,8 +135,25 @@ class SaleController {
         try {
 
             const sales = await Sale.findAll({ where: { sellerId: decodedToken.id } });
-            console.log(sales);
-            res.status(200).json(sales);
+            const results = [];
+            for (let i = 0; i < sales.length; i++) {
+                const sale = sales[i];
+                const product = await Product.findOne({ where: { id: sale.productId } });
+
+                if (product) {
+                    const result = {
+                        id: sale.id,
+                        imageLink: product.imageLink,
+                        productName: product.name,
+                        amountBuy: sale.amountBuy,
+                        unitPrice: sale.unitPrice,
+                        total: sale.amountBuy * sale.unitPrice
+                    };
+                    results.push(result);
+                }
+            }
+
+            res.status(200).json(results);
 
         } catch (error) {
             console.error('Erro no controller de venda:', error);
