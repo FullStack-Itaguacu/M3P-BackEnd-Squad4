@@ -17,14 +17,14 @@ O Pharmacy Central System API é uma API desenvolvida em JavaScript usando o fra
 
 ## Como acessar a API em produção
 
-1. Acesse
+1. Acesse https://pcs-api-56ex.onrender.com.
 
 ## Endpoints
 
-- Todos os endpoints são privados (exigem token jwt) com exceção do cadastro de usuário comprador e login de comprador e administrador (gera o token).
+- Todos os endpoints são privados (exigem token jwt) com exceção do cadastro de usuário comprador e login de comprador e administrador (geram o token).
 - Certifique-se de fornecer o token através de Authorization no header da request para endpoints privados. O token tem validade de um dia.
 - Certifique-se de sempre enviar um JSON formatado corretamente no body da request.
-- Você pode ver informações detalhadas sobre os endpoints em http://localhost:3333/api-docs/ ao rodar o projeto em modo de desenvolvimento local.
+- Você pode ver informações detalhadas sobre os endpoints em https://pcs-api-56ex.onrender.com/api-docs ou em http://localhost:3333/api-docs/ ao rodar o projeto em modo de desenvolvimento local.
 
 ## Tecnologias
 
