@@ -12,7 +12,6 @@ class ProductController {
         try {
             // Verificar dados passados no headers
             const decodedToken = await validaAuthorizationHeaders(authorization, res);
-            
             // Pegar os dados do produto passados no corpo da requisição
             const { name, labName, imageLink, dosage, unitPrice, typeProduct, totalStock } = req.body;
 
@@ -120,51 +119,67 @@ class ProductController {
             // Verificar dados passados no headers
             const decodedToken = await validaAuthorizationHeaders(authorization, res);
 
+            let productsByUserAdmin = "";
+            
+            // Verificar se o campo totalStock é um valor numérico
+            if (isNaN(Number(totalStock)) || totalStock < 0) {
+                return res.status(400).send({
+                    message: "O campo totalStock deve possuir um valor numérico válido!" 
+                });
+            }
+            
+             // Ordenar pelo campo totalStock
+             const order = [['total_stock', totalStock === 'asc' ? 'ASC' : 'DESC']];
+
+             // Validar os campos offset e limit
+             const valueOffset = parseInt(offset);
+             const valueLimit = parseInt(limit);
+             if (isNaN(offset) || isNaN(limit) || limit <= 0 || limit > 20) {
+                 return res.status(400).json({
+                     message: 'Parâmetros de paginação inválidos',
+                     cause: error.message
+                 });
+             }
+            
             // Filtrar produtos com base em query params
             const filter = {};
             if(name) {
                 filter.name = name;
+                productsByUserAdmin = await Product.findAndCountAll({
+                    where: { user_id: decodedToken.id, ...filter },
+                    order,
+                    valueOffset,
+                    valueLimit,
+                })
             }
 
-            // Validar o campo typeProduct
-            const productTypeOk = validaProductType(typeProduct)
-            if(!productTypeOk) {
-                return res.status(400).json({
-                    message: 'Campo tipo do produto mal formatado',
-                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
-                });
-            }
             if(typeProduct) {
+                // Validar o campo typeProduct
+                const productTypeOk = validaProductType(typeProduct)
+                if(!productTypeOk) {
+                    return res.status(400).json({
+                        message: 'Campo tipo do produto mal formatado',
+                        cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
+                    });
+                }
                 filter.typeProduct = typeProduct;
+                productsByUserAdmin = await Product.findAndCountAll({
+                    where: { user_id: decodedToken.id, ...filter },
+                    order,
+                    valueOffset,
+                    valueLimit,
+                })
             }
-
-            // Verificar se o campo totalStock é um valor numérico
-            if (isNaN(Number(totalStock)) || totalStock < 0) {
-                return response.status(400).send({
-                    message: "O campo totalStock deve possuir um valor numérico válido!" 
-                });
+            
+            if(!name && !typeProduct) {
+                productsByUserAdmin = await Product.findAndCountAll({
+                    where: { user_id: decodedToken.id},
+                    order,
+                    valueOffset,
+                    valueLimit,
+                })
             }
-
-            // Ordenar pelo campo totalStock
-            const order = [['total_stock', totalStock === 'asc' ? 'ASC' : 'DESC']];
-
-            // Validar os campos offset e limit
-            const valueOffset = parseInt(offset);
-            const valueLimit = parseInt(limit);
-            if (isNaN(valueOffset) || isNaN(valueLimit) || valueLimit <= 0 || valueLimit > 20) {
-                return res.status(400).json({
-                    message: 'Parâmetros de paginação inválidos',
-                    cause: error.message
-                });
-            }
-
-            // Consultar produtos cadastrados pelo administrador com base no seu id
-            const productsByUserAdmin = await Product.findAndCountAll({
-                where: { user_id: decodedToken.id, ...filter },
-                order,
-                valueOffset,
-                valueLimit,
-            })
+            
             if(productsByUserAdmin.count === 0) {
                 return res.status(204).json({
                     message: 'Nenhum produto encontrado'
@@ -201,18 +216,18 @@ class ProductController {
                 filter.name = name;
             }
 
-            // Validar o campo typeProduct
-            const productTypeOk = validaProductType(typeProduct)
-            if(!productTypeOk) {
-                return res.status(400).json({
-                    message: 'Campo tipo do produto mal formatado',
-                    cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
-                });
-            }
             if(typeProduct) {
+                // Validar o campo typeProduct
+                const productTypeOk = validaProductType(typeProduct)
+                if(!productTypeOk) {
+                    return res.status(400).json({
+                        message: 'Campo tipo do produto mal formatado',
+                        cause: 'O campo de ter o valor: "Medicamento Controlado" ou "Medicamento Não Controlado"'
+                    });
+                }
                 filter.typeProduct = typeProduct;
             }
-
+            
             // Verificar se o campo totalStock é um valor numérico
             if (isNaN(Number(totalStock)) || totalStock < 0) {
                 return response.status(400).send({

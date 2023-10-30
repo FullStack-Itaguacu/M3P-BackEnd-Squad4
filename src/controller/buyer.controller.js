@@ -42,7 +42,7 @@ class BuyerController {
   }
   
   //admin
-  async listAllBuyers(req, res) {
+  async listAllUsers(req, res) {
     //#swagger.tags = ['Buyer']
     try {
       const { offset, limit } = req.params;
@@ -56,10 +56,6 @@ class BuyerController {
           msg: 'Parâmetros de paginação inválidos',
         });
       }
-  //encontrar todos compradores
-      const query = {
-        typeUser: 'Comprador',
-      };
   
       if (fullName) {
         query.fullName = { $regex: new RegExp(fullName, 'i') };
@@ -68,13 +64,12 @@ class BuyerController {
       const sortOrder = createdAt === 'asc' ? 'ASC' : 'DESC';
   
       const users = await User.findAll({
-        where: query,
         order: [['createdAt', sortOrder]],
         offset: parsedOffset,
         limit: Math.min(parsedLimit, 20),
       });
   
-      const count = await User.count({ where: query }); 
+      const count = await User.count(); 
       if (users.length === 0) {
         return res.status(204).json({
           msg: 'Nenhum usuário encontrado',
@@ -86,7 +81,7 @@ class BuyerController {
         users,
       });
     } catch (error) {
-      console.error('Error in listAllBuyers:', error);
+      console.error('Error in listAllUsers:', error);
   
       return res.status(500).json({
         error: {

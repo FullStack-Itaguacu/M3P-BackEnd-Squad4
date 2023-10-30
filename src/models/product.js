@@ -48,7 +48,7 @@ const Product = connection.define(
             allowNull: false,
             validate: {
                 isIn: {
-                    args:[['Medicamento Controlado', 'Medicamento não Controlado']],
+                    args:[['Medicamento Controlado', 'Medicamento Não Controlado']],
                     msg: 'O tipo de produto deve ser Medicamento Controlado ou Medicamento não Controlado'
                 }
             }
